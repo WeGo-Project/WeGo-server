@@ -8,18 +8,6 @@ router.get('/user', function(req, res) {
     res.render('user.jade');
 });
 
-router.get('/travel', function(req, res) {
-    res.render('travel.jade');
-});
-
-router.get('/travelItem', function(req, res) {
-    res.render('travelItem.jade');
-});
-
-router.get('/comment', function(req, res) {
-    res.render('comment.jade');
-});
-
 var fileFinishedDirectory = './data/uploaded/finished/';
 var fileTempDirectory = './data/uploaded/tmp/';
 
@@ -51,7 +39,7 @@ router.post('/upload', function(req, res) {
           res.json(result);
           return;
       }
-      
+
       var targetFilePath = fileFinishedDirectory + files.file.name;
       fs.rename(files.file.path, targetFilePath, function (error) {
           if (error) {
@@ -63,7 +51,7 @@ router.post('/upload', function(req, res) {
               result.result = 'success';
               console.log("Saved file: " + result.data);
           }
-          
+
           result.data = files.file.name;
           res.json(result);
       });
@@ -74,7 +62,7 @@ router.post('/upload', function(req, res) {
 router.get('/download', function(req, res) {
     console.log('requested to send file: ' + req.query.filename);
     var filename = req.query.filename;
-    
+
     fs.exists(fileFinishedDirectory + req.query.filename, function (exists) {
       if (exists) {
           var sendOptions = { root: fileFinishedDirectory };
@@ -97,11 +85,5 @@ router.get('/download', function(req, res) {
 
 var user = require('./user.js');
 router.use('/user', user);
-var travel = require('./travel.js');
-router.use('/travel', travel);
-var travelItem = require('./travelItem.js');
-router.use('/travelItem', travelItem);
-var comment = require('./comment.js');
-router.use('/comment', comment);
 
 module.exports = router;
