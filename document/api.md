@@ -1,23 +1,23 @@
 ## API说明
 ### URL 格式
-如果未特别说明，所有API均用HTTP/POST方法查询，提交的数据放在query string中，附带用户cookie。  
+如果未特别说明，所有API均用HTTP/POST方法查询，提交的数据放在query string中，附带用户cookie。
 基础URL格式：
-```(server.com)/(target)/(action type)?(query string)```  
-```server.com``` 服务器域名  
-```target``` 查询的业务实体对象  
-```action type``` 对对象的查询类型  
-```query string``` 提交的表单查询字符串  
-用户登录举例： ```server.com/user/query?username=asd&password=asd```  
+```(server.com)/(target)/(action type)?(query string)```
+```server.com``` 服务器域名
+```target``` 查询的业务实体对象
+```action type``` 对对象的查询类型
+```query string``` 提交的表单查询字符串
+用户登录举例： ```server.com/user/query?username=asd&password=asd```
 用户注册举例： ```server.com/user/insert?username=a&password=a```
 
 ### 查询返回的格式
-如果未特别说明，所有API均返回JSON字符串作为结果。  
-返回的JSON字符串键值对说明  
-```request``` 查询类型，类型代码定义见文档后续  
-```target``` 查询对象，对象代码定义见文档后续  
-```result``` 查询结果，结果代码定义见文档后续  
-```data``` 查询得到的数据，以JSON数组方式存储，如果```result```指示失败则可能没有该项  
-用户登录返回结果示例： ```{"request":"3","target":"1","result":"-1"}```  
+如果未特别说明，所有API均返回JSON字符串作为结果。
+返回的JSON字符串键值对说明
+```request``` 查询类型，类型代码定义见文档后续
+```target``` 查询对象，对象代码定义见文档后续
+```result``` 查询结果，结果代码定义见文档后续
+```data``` 查询得到的数据，以JSON数组方式存储，如果```result```指示失败则可能没有该项
+用户登录返回结果示例： ```{"request":"3","target":"1","result":"-1"}```
 
 ## API列表
 ### user
@@ -42,20 +42,28 @@
 |查询某用户在某段时间内的所有活动|/query_userActiTime|sponsor_id, time_lower_bound, time_upper_bound|
 
 
-### activity_tag
+### tag
+|查询操作|url|数据要求|
+|-------|-------|-------|
+|查询全部标签|/query_all_tag||
+
+
+### exercise_tag
 |查询操作|url|数据要求|
 |-------|-------|------|
-|为某个活动添加一个标签|/addActiTag|name, activity_id|
-|删除一个标签|/delTag|id|
-|查询某个活动的tag|/query_ActiTag|activity_id|
+|为某个活动添加一个标签|/add_exer_tag|tag_id, exercise_id|
+|为某个活动添加一个新的标签|/add_exer_new_tag|name, exercise_id|
+|删除活动的一个标签|/del_tag|tag_id, exercise_id|
+|查询某个活动的tag|/query_exer_tag|exercise_id|
 
 
 ### user_tag
 |查询操作|url|数据要求|
 |-------|-------|------|
-|为某个用户添加标签|/adduserTag|name, user_id|
-|删除一个标签|/delusrTag|id|
-|查询某个用户的tag|/query_usrTag|user_id|
+|为某个用户添加标签|/add_user_tag|tag_id, user_id|
+|为某个用户添加一个新的标签|/add_user_new_tag|name, user_id|
+|删除用户的一个标签|/del_usr_tag|tag_id, user_id|
+|查询某个用户的tag|/query_usr_tag|user_id|
 
 ### attendency
 |查询操作|url|数据要求|
@@ -80,9 +88,9 @@
 |查询某个用户的通知|/query_notice|user_id|
 
 ## 数据库表更改建议
-添加user_cookie表来存储用户登录状态，表结构为id, user_id, created_datetime, cookie  
-为acticity表添加status列，用来标记活动状态，如等待中、商议中、已取消等，同时添加created_datetime列来记录活动创建时间  
-为attendency表添加created_day列，用于记录用户何时报名参加该活动  
+添加user_cookie表来存储用户登录状态，表结构为id, user_id, created_datetime, cookie
+为acticity表添加status列，用来标记活动状态，如等待中、商议中、已取消等，同时添加created_datetime列来记录活动创建时间
+为attendency表添加created_day列，用于记录用户何时报名参加该活动
 为notice添加status列，用于记录用户是否看过这个通知
 
 ## 返回状态码定义
