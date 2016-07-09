@@ -1,6 +1,6 @@
 ## API说明
 ### URL 格式
-如果未特别说明，所有API均用HTTP/GET方法查询，提交的数据放在query string中，附带用户cookie。  
+如果未特别说明，所有API均用HTTP/POST方法查询，提交的数据放在query string中，附带用户cookie。  
 基础URL格式：
 ```(server.com)/(target)/(action type)?(query string)```  
 ```server.com``` 服务器域名  
@@ -21,64 +21,64 @@
 
 ## API列表
 ### user
-|查询操作|查询类型|数据要求|
+|查询操作|url|数据要求|
 |-------|-------|------|
-|登录|query|username, password|
-|注册|insert|username, password, gender, birthday|
-|更改用户名|update|id, username|
-|更改密码|update|id, password|
+|登录|/login|username, password|
+|注册|/register|username, password, gender, birthday|
+|更改用户名|/chguname|id, username|
+|更改密码|/chgpwd|id, password|
 
 ### activity
-|查询操作|查询类型|数据要求|
+|查询操作|url|数据要求|
 |-------|-------|------|
-|新建活动|insert|latitude, longitude, sponsor_id, start_time, end_time, name|
-|更改活动开始时间|update|id, start_time|
-|更改活动结束时间|update|id, end_time|
-|更改活动名|update|id, name|
-|更改活动位置|update|latitude, longitude|
-|更改活动状态|update|id, status|
-|查询一定范围内的活动|query|latitude_lower_bound, latitude_upper_bound, longitude_lower_bound, longitude_upper_bound|
-|查询拥有某个标签的一定范围内的活动|query|latitude_lower_bound, latitude_upper_bound, longitude_lower_bound, longitude_upper_bound, tag|
-|查询某用户发起的所有活动|query|sponsor_id|
-|查询某用户在某段时间内的所有活动|query|sponsor_id, time_lower_bound, time_upper_bound|
+|新建活动|/addactivity|latitude, longitude, sponsor_id, start_time, end_time, name|
+|更改活动开始时间|/chgbegintime|id, start_time|
+|更改活动结束时间|/chgendtime|id, end_time|
+|更改活动名|/chgactname|id, name|
+|更改活动位置|/chgloc|latitude, longitude|
+|更改活动状态|/chgstate|id, status|
+|查询一定范围内的活动|/query_acti|latitude_lower_bound, latitude_upper_bound, longitude_lower_bound, longitude_upper_bound|
+|查询拥有某个标签的一定范围内的活动|/query_tagActi|latitude_lower_bound, latitude_upper_bound, longitude_lower_bound, longitude_upper_bound, tag|
+|查询某用户发起的所有活动|/query_userActi|sponsor_id|
+|查询某用户在某段时间内的所有活动|/query_userActiTime|sponsor_id, time_lower_bound, time_upper_bound|
 
 
 ### activity_tag
 |查询操作|查询类型|数据要求|
 |-------|-------|------|
-|为某个活动添加一个标签|insert|name, activity_id|
-|删除一个标签|delete|id|
-|查询某个活动的tag|query|activity_id|
+|为某个活动添加一个标签|/addActiTag|name, activity_id|
+|删除一个标签|/delTag|id|
+|查询某个活动的tag|/query_ActiTag|activity_id|
 
 
 ### user_tag
 |查询操作|查询类型|数据要求|
 |-------|-------|------|
-|为某个用户添加标签|insert|name, user_id|
-|删除一个标签|delete|id|
-|查询某个用户的tag|query|user_id|
+|为某个用户添加标签|/adduserTag|name, user_id|
+|删除一个标签|/delusrTag|id|
+|查询某个用户的tag|/query_usrTag|user_id|
 
 ### attendency
 |查询操作|查询类型|数据要求|
 |-------|-------|------|
-|某个用户参加某个活动|insert|user_id, activity_id, created_day|
-|某个用户取消参加某个活动|delete|user_id|
-|查询某个活动有什么人参加|query|activity_id|
-|查询某个用户是否参加了某个活动|query|user_id, activity_id|
-|查询某个用户参加过的所有活动|query|user_id, type='all'|
-|查询某个用户某个时间内参加过的活动|query|user_id, time_lower_bound, time_upper_bound|
-|查询某个用户参加的还未结束的活动|query|user_id, type='waiting'|
+|某个用户参加某个活动|/addusrActi|user_id, activity_id, created_day|
+|某个用户取消参加某个活动|/delusrActi|user_id|
+|查询某个活动有什么人参加|/query_usrforActi|activity_id|
+|查询某个用户是否参加了某个活动|/query_actiforusr|user_id, activity_id|
+|查询某个用户参加过的所有活动|/query_allforusr|user_id, type='all'|
+|查询某个用户某个时间内参加过的活动|/query_actibytime|user_id, time_lower_bound, time_upper_bound|
+|查询某个用户参加的还未结束的活动|/query_actibeforeend|user_id, type='waiting'|
 
 ### activity_comment
 |查询操作|查询类型|数据要求|
 |-------|-------|------|
-|某个用户给某个活动添加评论|insert|user_id, activity_id, comment, grade, time|
-|查询某个活动的所有评论|query|activity_id|
+|某个用户给某个活动添加评论|/addcomment|user_id, activity_id, comment, grade, time|
+|查询某个活动的所有评论|/query_comment|activity_id|
 
 ### notice
 |查询操作|查询类型|数据要求|
 |-------|-------|------|
-|查询某个用户的通知|query|user_id|
+|查询某个用户的通知|/query_notice|user_id|
 
 ## 数据库表更改建议
 添加user_cookie表来存储用户登录状态，表结构为id, user_id, created_datetime, cookie  

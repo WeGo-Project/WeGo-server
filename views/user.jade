@@ -1,21 +1,21 @@
 block content
     h1 register
-    form(action='/user/insert', method='get')
+    form(action='/user/insert', method='post')
         input(type='text', name='username')
         input(type='text', name='password')
         input(type='submit')
 
     h1 login
-    form(action='/user/query', method='get')
+    form(action='/user/query', method='post')
         input(type='text', name='username')
         input(type='text', name='password')
         input(type='submit')
-    
+
     h1 query by id
     form(action='/user/query', method='get')
         input(type='text', name='id')
         input(type='submit')
-    
+
     h1 query by username
     form(action='/user/query', method='get')
         input(type='text', name='username')
