@@ -42,6 +42,12 @@
 |查询某用户在某段时间内的所有活动|/query_userActiTime|sponsor_id, time_lower_bound, time_upper_bound|
 
 
+### tag
+|查询操作|url|数据要求|
+|-------|-------|-------|
+|查询全部标签|/query_all_tag||
+
+
 ### exercise_tag
 |查询操作|url|数据要求|
 |-------|-------|------|
