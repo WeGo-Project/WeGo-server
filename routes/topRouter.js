@@ -11,4 +11,11 @@ router.get('/user', function(req, res) {
 var user = require('./user.js');
 router.use('/user', user);
 
+router.get('/attendency', function(req, res) {
+    res.render('attendency.jade');
+});
+
+var attendency = require('./attendency.js');
+router.use('/attendency', attendency);
+
 module.exports = router;
