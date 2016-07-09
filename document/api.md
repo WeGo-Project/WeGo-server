@@ -26,7 +26,6 @@
 |登录|/login|username, password|
 |注册|/register|username, password, gender, birthday|
 |更改用户名|/chguname|id, username|
-|更改密码|/chgpwd|id, password|
 
 ### activity
 |查询操作|url|数据要求|
@@ -44,7 +43,7 @@
 
 
 ### activity_tag
-|查询操作|查询类型|数据要求|
+|查询操作|url|数据要求|
 |-------|-------|------|
 |为某个活动添加一个标签|/addActiTag|name, activity_id|
 |删除一个标签|/delTag|id|
@@ -52,14 +51,14 @@
 
 
 ### user_tag
-|查询操作|查询类型|数据要求|
+|查询操作|url|数据要求|
 |-------|-------|------|
 |为某个用户添加标签|/adduserTag|name, user_id|
 |删除一个标签|/delusrTag|id|
 |查询某个用户的tag|/query_usrTag|user_id|
 
 ### attendency
-|查询操作|查询类型|数据要求|
+|查询操作|url|数据要求|
 |-------|-------|------|
 |某个用户参加某个活动|/addusrActi|user_id, activity_id, created_day|
 |某个用户取消参加某个活动|/delusrActi|user_id|
@@ -70,13 +69,13 @@
 |查询某个用户参加的还未结束的活动|/query_actibeforeend|user_id, type='waiting'|
 
 ### activity_comment
-|查询操作|查询类型|数据要求|
+|查询操作|url|数据要求|
 |-------|-------|------|
 |某个用户给某个活动添加评论|/addcomment|user_id, activity_id, comment, grade, time|
 |查询某个活动的所有评论|/query_comment|activity_id|
 
 ### notice
-|查询操作|查询类型|数据要求|
+|查询操作|url|数据要求|
 |-------|-------|------|
 |查询某个用户的通知|/query_notice|user_id|
 
@@ -85,3 +84,10 @@
 为acticity表添加status列，用来标记活动状态，如等待中、商议中、已取消等，同时添加created_datetime列来记录活动创建时间  
 为attendency表添加created_day列，用于记录用户何时报名参加该活动  
 为notice添加status列，用于记录用户是否看过这个通知
+
+## 返回状态码定义
+|返回码|含义|
+|-------|-------|
+|200|成功|
+|401|用户未登录|
+|400|参数类型或格式错误|
