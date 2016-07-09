@@ -3,7 +3,7 @@ var mysql = require('mysql')
 mysqlPool = mysql.createPool( {
     user: 'root',
     password: 'qweasdzxc',
-    database: 'manlvtu'
+    database: 'wego'
 });
 
 console.log('database connection pool set up');
