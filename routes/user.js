@@ -2,25 +2,30 @@ var express = require('express');
 var router = express.Router();
 var targetDB = require('../database/user.js');
 
-router.post('/query', function (req, res) {
+router.use(function(req, res, next) {
+    console.log(req);
+    next();
+});
+
+router.post('/login', function (req, res) {
     targetDB.query(req.body, function(result) {
         res.json(result);
     });
 });
 
-router.get('/remove', function (req, res) {
+router.post('/register', function (req, res) {
     targetDB.remove(req.body, function(result) {
         res.json(result);
     });
 });
 
-router.get('/update', function (req, res) {
+router.post('/chguname', function (req, res) {
     targetDB.update(req.body, function(result) {
         res.json(result);
     });
 });
 
-router.get('/insert', function (req, res) {
+router.post('/chgpwd', function (req, res) {
     targetDB.insert(req.body, function(result) {
         res.json(result);
     });

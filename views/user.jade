@@ -1,12 +1,12 @@
 block content
     h1 register
-    form(action='/user/insert', method='post')
+    form(action='/user/register', method='post')
         input(type='text', name='username')
         input(type='text', name='password')
         input(type='submit')
 
     h1 login
-    form(action='/user/query', method='post')
+    form(action='/user/login', method='post')
         input(type='text', name='username')
         input(type='text', name='password')
         input(type='submit')

@@ -30,7 +30,7 @@ KeyDefine.query = function(query, callback) {
             callback(result);
             return;
         }
-        
+
         connection.query(queryOption, function(err, rows) {
             if (err) {
                 console.error('Error in querying %s: ' + err.code, KeyDefine.TABLE_NAME);
@@ -67,8 +67,8 @@ KeyDefine.remove = function(query, callback) {
             values: [KeyDefine.TABLE_NAME, query.id],
             timeout: 10000
         };
-        
-        
+
+
         connection.query(queryOption, function(err, rows) {
             if (err) {
                 console.error('Error in deleting %s: ' + err.code, KeyDefine.TABLE_NAME);
@@ -113,7 +113,7 @@ KeyDefine.update = function(query, callback) {
                 timeout: 10000
             };
         }
-        
+
         connection.query(queryOption, function(err, rows) {
             if (err) {
                 console.error('Error in updating %s: ' + err.code, KeyDefine.TABLE_NAME);
@@ -151,7 +151,7 @@ KeyDefine.insert = function(query, callback) {
             callback(result);
             return;
         }
-        
+
         connection.query(queryOption, function(err, rows) {
             if (err) {
                 console.error('Error in inserting %s: ' + err.code, KeyDefine.TABLE_NAME);
