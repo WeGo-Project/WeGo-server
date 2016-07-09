@@ -1,4 +1,5 @@
 define = function() {
+    this.USER_INIT_CREDIT = 100;
     this.ACTION_QUERY = '1';
     this.ACTION_REMOVE = '2';
     this.ACTION_INSERT = '3';

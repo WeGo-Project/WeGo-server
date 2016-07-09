@@ -2,7 +2,7 @@ var DBPool = require('./dbpool.js');
 var Define = require('./define.js');
 
 var KeyDefine = new Define;
-KeyDefine.TABLE_NAME = 'user';
+KeyDefine.TABLE_NAME = 'users';
 
 var CurrentDB = {}
 CurrentDB.login = function(query, callback) {
@@ -37,7 +37,7 @@ CurrentDB.login = function(query, callback) {
             }
 
             result.result = KeyDefine.RESULT_SUCCESS;
-            result.data = {id: rows[0].id, username: rows[0].username}
+            result.data = {id: rows[0].id, name: rows[0].name}
             callback(result);
         });
     });
@@ -52,14 +52,14 @@ CurrentDB.register = function(query, callback) {
             return;
         }
 
-        if (!(query.id && query.username && query.gender && query.birthday)) {
+        if (!(query.id && query.name && query.gender && query.birthday)) {
             callback(result);
             return;
         }
 
         var queryOption = {
-            sql: 'insert into ?? (id, username, gender, birthday) value (?, ?, ?, ?)',
-            values: [KeyDefine.TABLE_NAME, query.id, query.username, query.gender, query.birthday],
+            sql: 'insert into ?? (id, name, gender, birthday, credit) value (?, ?, ?, ?, ?)',
+            values: [KeyDefine.TABLE_NAME, query.id, query.name, query.gender, query.birthday, KeyDefine.USER_INIT_CREDIT],
             timeout: 10000
         };
 
@@ -92,13 +92,13 @@ CurrentDB.chguname = function(query, callback) {
         }
 
         var queryOption;
-        if (!(query.id && query.username)) {
+        if (!(query.id && query.name)) {
             callback(result);
             return;
         } else {
             queryOption = {
-                sql: 'update ?? set username = ? where id = ?',
-                values: [KeyDefine.TABLE_NAME, query.username, query.id],
+                sql: 'update ?? set name = ? where id = ?',
+                values: [KeyDefine.TABLE_NAME, query.name, query.id],
                 timeout: 10000
             };
         }

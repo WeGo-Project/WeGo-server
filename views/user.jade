@@ -2,7 +2,7 @@ block content
     h1 register
     form(action='/user/register', method='post')
         input(type='text', name='id')
-        input(type='text', name='username')
+        input(type='text', name='name')
         input(type='text', name='gender')
         input(type='text', name='birthday')
         input(type='submit')
@@ -15,5 +15,5 @@ block content
     h1 change username
     form(action='/user/chguname', method='post')
         input(type='text', name='id')
-        input(type='text', name='username')
+        input(type='text', name='name')
         input(type='submit')
