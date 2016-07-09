@@ -11,4 +11,7 @@ router.get('/user', function(req, res) {
 var user = require('./user.js');
 router.use('/user', user);
 
+var exercise_tag = require('./exercise_tag.js');
+router.use('/exercise_tag', exercise_tag);
+
 module.exports = router;

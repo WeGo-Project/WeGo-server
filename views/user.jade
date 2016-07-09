@@ -1,15 +1,13 @@
 block content
-    h1 register
-    form(action='/user/register', method='post')
-        input(type='text', name='id')
-        input(type='text', name='name')
-        input(type='text', name='gender')
-        input(type='text', name='birthday')
+    h1 query
+    form(action='/exercise_tag/query_exer_tag', method='post')
+        input(type='text', name='exercise_id')
         input(type='submit')
 
-    h1 login
-    form(action='/user/login', method='post')
-        input(type='text', name='id')
+    h1 add
+    form(action='/exercise_tag/add_exer_tag', method='post')
+        input(type='text', name='exercise_id')
+        input(type='text', name='tag_id')
         input(type='submit')
 
     h1 change username
