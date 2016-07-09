@@ -69,7 +69,7 @@
 |查询操作|url|数据要求|
 |-------|-------|------|
 |某个用户参加某个活动|/addusrActi|user_id, activity_id, created_day|
-|某个用户取消参加某个活动|/delusrActi|user_id|
+|某个用户取消参加某个活动|/delusrActi|user_id, activity_id|
 |查询某个活动有什么人参加|/query_usrforActi|activity_id|
 |查询某个用户是否参加了某个活动|/query_actiforusr|user_id, activity_id|
 |查询某个用户参加过的所有活动|/query_allforusr|user_id, type='all'|
