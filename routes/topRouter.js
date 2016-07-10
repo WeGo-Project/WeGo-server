@@ -14,4 +14,7 @@ router.use('/user', user);
 var exercise_tag = require('./exercise_tag.js');
 router.use('/exercise_tag', exercise_tag);
 
+var user_tag = require('./user_tag.js');
+router.use('/user_tag', user_tag);
+
 module.exports = router;

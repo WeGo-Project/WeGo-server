@@ -4,11 +4,14 @@ var tagDB = require('./tag.js');
 
 var KeyDefine = new Define;
 KeyDefine.TABLE_NAME = 'user_tag';
-KeyDefine.RESULT_LACK_QUERY_PARAM = '1';
+KeyDefine.PARAM_LACK_QUERY_PARAM = '1';
 KeyDefine.RESULT_QUERY_FAILED = '2';
 KeyDefine.RESULT_QUERY_EMPTY = '3';
 KeyDefine.RESULT_ADD_FAILED = '4';
-KeyDefine.RESULT_DELETE_FAILED = '5';
+KeyDefine.PARAM_DUP_ENTRY = '5';
+KeyDefine.PARAM_WRONG_TYPE_FOR_COLUMNS = '6';
+KeyDefine.RESULT_NOT_REFERENCED_ROW = '7';
+KeyDefine.RESULT_DELETE_NULL_AFFECT = '8';
 
 var CurrentDB = {}
 CurrentDB.add = function(query, callback) {
@@ -33,13 +36,13 @@ CurrentDB.add = function(query, callback) {
                 timeout: 10000
             }
         } else if (!query.user_id) {
-            console.error('Error in query param: user_id');
-            result.result = KeyDefine.RESULT_LACK_QUERY_PARAM;
+            console.error('Error in add param: user_id');
+            result.result = KeyDefine.PARAM_LACK_QUERY_PARAM;
             callback(result);
             return;
         } else if (!query.tag_id) {
-            console.error('Error in query param: tag_id');
-            result.result = KeyDefine.RESULT_LACK_QUERY_PARAM;
+            console.error('Error in add param: tag_id');
+            result.result = KeyDefine.PARAM_LACK_QUERY_PARAM;
             callback(result);
             return;
         } else {
@@ -51,7 +54,17 @@ CurrentDB.add = function(query, callback) {
             if (err) {
                 if (err.code === 'ER_DUP_ENTRY') {
                     console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
-                    result.result = KeyDefine.RESULT_DUP_ENTRY;
+                    result.result = KeyDefine.PARAM_DUP_ENTRY;
+                    callback(result);
+                    return;
+                } else if (err.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD') {
+                    console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
+                    result.result = KeyDefine.PARAM_WRONG_TYPE_FOR_COLUMNS;
+                    callback(result);
+                    return;
+                } else if (err.code === 'ER_NO_REFERENCED_ROW_2') {
+                    console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
+                    result.result = KeyDefine.RESULT_NOT_REFERENCED_ROW;
                     callback(result);
                     return;
                 } else {
@@ -92,8 +105,12 @@ CurrentDB.query = function(query, callback) {
                 values: [KeyDefine.TABLE_NAME, query.user_id],
                 timeout: 10000
             }
+        } else if (!query.user_id) {
+            console.error('Error in query param: user_id');
+            result.result = KeyDefine.PARAM_LACK_QUERY_PARAM;
+            callback(result);
+            return;
         } else {
-            result.result = KeyDefine.RESULT_LACK_QUERY_PARAM;
             callback(result);
             return;
         }
@@ -158,13 +175,13 @@ CurrentDB.delete = function(query, callback) {
                 timeout: 10000
             }
         } else if (!query.tag_id) {
-            console.error('Error in getting query param named tag_id');
-            result.result = KeyDefine.RESULT_LACK_QUERY_PARAM;
+            console.error('Error in getting delete param named tag_id');
+            result.result = KeyDefine.PARAM_LACK_QUERY_PARAM;
             callback(result);
             return;
         } else if (!query.user_id) {
-            console.error('Error in getting query param named user_id');
-            result.result = KeyDefine.RESULT_LACK_QUERY_PARAM;
+            console.error('Error in getting delete param named user_id');
+            result.result = KeyDefine.PARAM_LACK_QUERY_PARAM;
             callback(result);
             return;
         } else {
@@ -177,15 +194,15 @@ CurrentDB.delete = function(query, callback) {
                 console.error('Error in delete %s: ' + err.code, KeyDefine.TABLE_NAME);
                 callback(result);
                 return;
-            } else if (rows.length <= 0) {
-                console.error('Failed in delete in ' + KeyDefine.TABLE_NAME);
-                result.result = KeyDefine.RESULT_DELETE_FAILED;
+            } else if (rows.affectedRows !== 0) {
+                result.result = KeyDefine.RESULT_SUCCESS;
+                callback(result);
+            } else {
+                console.error('Failed to delete in ' + KeyDefine.TABLE_NAME + '. Null rows affected.');
+                result.result = KeyDefine.RESULT_DELETE_NULL_AFFECT;
                 callback(result);
                 return;
             }
-
-            result.result = KeyDefine.RESULT_SUCCESS;
-            callback(result);
         });
     });
 }

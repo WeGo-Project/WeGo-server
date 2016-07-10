@@ -12,7 +12,7 @@ router.post('/add_user_new_tag', function(req, res) {
 
 });
 
-router.post('/del_usr_tag', function(req, res) {
+router.post('/del_tag', function(req, res) {
     targetDB.delete(req.body, function(result) {
         res.json(result);
     });

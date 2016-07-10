@@ -3,7 +3,7 @@ var Define = require('./define.js');
 
 var KeyDefine = new Define;
 KeyDefine.TABLE_NAME = 'tag';
-KeyDefine.RESULT_LACK_QUERY_PARAM = '1';
+KeyDefine.PARAM_LACK_QUERY_PARAM = '1';
 KeyDefine.RESULT_QUERY_FAILED = '2';
 KeyDefine.RESULT_QUERY_EMPTY = '3';
 
@@ -31,7 +31,7 @@ CurrentDB.query = function(query, callback) {
             }
         } else {
             // query params error
-            result.result = KeyDefine.RESULT_LACK_QUERY_PARAM;
+            result.result = KeyDefine.PARAM_LACK_QUERY_PARAM;
             callback(result);
             return;
         }
