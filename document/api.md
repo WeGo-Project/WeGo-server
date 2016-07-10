@@ -2,36 +2,36 @@
 ### URL 格式
 如果未特别说明，所有API均用HTTP/POST方法查询，提交的数据以键值对的方式放在POST content中，如果用户已登录，在POST content中加如以键为open_id，值为用户id的键值对。  
 基础URL格式：
-```(server.com)/(target)/(action type)?(query string)```
-```server.com``` 服务器域名
-```target``` 查询的业务实体对象
-```action type``` 对对象的查询类型
-```query string``` 提交的表单查询字符串
-用户登录举例： ```server.com/user/query?username=asd&password=asd```
-用户注册举例： ```server.com/user/insert?username=a&password=a```
+```(server.com)/(target)/(action type)?(query string)```  
+```server.com``` 服务器域名  
+```target``` 查询的业务实体对象  
+```action type``` 对象的查询类型  
+```query string``` 提交的表单查询字符串  
+用户登录举例： ```server.com/user/login```  
+用户注册举例： ```server.com/user/register```  
 
 ### 查询返回的格式
 如果未特别说明，所有API均返回JSON字符串作为结果。
-返回的JSON字符串键值对说明
-```request``` 查询类型，类型代码定义见文档后续
-```target``` 查询对象，对象代码定义见文档后续
-```result``` 查询结果，结果代码定义见文档后续
-```data``` 查询得到的数据，以JSON数组方式存储，如果```result```指示失败则可能没有该项
+#### 返回的JSON字符串键值对说明  
+```request``` 查询类型，类型代码定义见文档后续  
+```target``` 查询对象，对象代码定义见文档后续  
+```result``` 查询结果，结果代码定义见文档后续  
+```data``` 查询得到的数据，以JSON数组方式存储，如果```result```指示失败则可能没有该项  
 用户登录返回结果示例： ```{"request":"3","target":"1","result":"-1"}```
 
 ## 全局状态码定义
 |返回码标识|返回区域|返回码|含义|
 |--------|-------|-----|---|
 |RESULT_SUCCESS|result|200|成功|
-|RESULT_SUCCESS|result|400|失败|
+|RESULT_FAILED|result|400|失败|
 |RESULT_PERMISSION_DENY|result|401|没有权限进行这个操作|
 |RESULT_SERVER_FAILED|result|501|服务器发生了错误|
-|RESULT_USER_LOGIN_REQUESTED|402|200|这个操作需要用户登录|
+|RESULT_USER_LOGIN_REQUESTED|result|402|这个操作需要用户登录|
 |RESULT_TIMESTAMP_ERROR|result|8000|请求操作中的时间信息有误|
-|ACTION_QUERY|result|1|查询操作|
-|ACTION_REMOVE|result|2|删除操作|
-|ACTION_INSERT|result|3|插入操作|
-|ACTION_UPDATE|result|4|更新操作|
+|ACTION_QUERY|request|1|查询操作|
+|ACTION_REMOVE|request|2|删除操作|
+|ACTION_INSERT|request|3|插入操作|
+|ACTION_UPDATE|request|4|更新操作|
 
 ## API列表
 ### user
@@ -40,6 +40,12 @@
 |登录|/login|username, password|
 |注册|/register|username, password, gender, birthday|
 |更改用户名|/chguname|id, username|
+
+#### user常量定义
+#### exercise常量定义
+|标识|值|含义|
+|--- |-|----|
+|LARGEST_AGE|100 \* 365 \* 24 \* 3600 \* 1000|用户的生日最早为100年前|
 
 ### exercise
 |查询操作|url|数据要求|
@@ -55,18 +61,18 @@
 |查询某用户发起的所有活动|/query_user_exercise|sponsor_id|
 |查询某用户在某段时间内的所有活动|/query_user_current_exercise|sponsor_id, time_lower_bound, time_upper_bound|
 
-## exercise状态码定义
+#### exercise状态码定义
 |返回码标识|返回区域|返回码|含义|
 |--------|-------|-----|---|
 |RESULT_NOT_SUCH_STATUS|result|8100|活动状态不正确|
 
-## exercise常量定义
+#### exercise常量定义
 |标识|值|含义|
 |--- |-|----|
 |EXERCISE_NEW_STATUS|0|新建的活动|
 |EXERCISE_FINISHED_ATTEND_STATUS|1|此活动已截止参加|
 |EXERCISE_CANCEL_STATUS|2|此活动已取消|
-|MAX_TIMESTAMP_FORWARD|24 * 3600 * 1000|活动发到服务器的时间超过一个小时|
+|MAX_TIMESTAMP_FORWARD|24 \* 3600 \* 1000|活动发到服务器的时间超过一天|
 
 ### tag
 |查询操作|url|数据要求|
