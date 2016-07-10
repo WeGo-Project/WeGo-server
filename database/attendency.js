@@ -41,7 +41,7 @@ CurrentDB.addusrActi = function(req, callback)
                     return;
                 }
 
-                result.data = {};
+                result.data = [];
                 callback(result);
             });
         }
@@ -89,7 +89,7 @@ CurrentDB.delusrActi = function(req, callback)
                     return;
                 }
 
-                result.data = {};
+                result.data = [];
                 callback(result);
             });
         }
