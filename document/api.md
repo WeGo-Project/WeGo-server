@@ -35,11 +35,11 @@
 
 ## API列表
 ### user
-|查询操作|url|数据要求|
-|-------|-------|------|
-|登录|/login|username, password|
-|注册|/register|username, password, gender, birthday|
-|更改用户名|/chguname|id, username|
+|查询操作|url|数据要求|返回数据结构|错误类型|
+|-------|-------|------|------|-------|
+|登录|/login|id|```"data":[{"id":"qwe","name":"asd","password":null,"birthday":"2060-00-00","gender":0,"credit":100}]```|RESULT_FAILED|
+|注册|/register|id, name, gender, birthday|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_TOO_EARLY|
+|更改用户名|/chguname|id, name|RESULT_SUCCESS|RESULT_FAILED, RESULT_PERMISSION_DENY|
 
 #### user常量定义
 |标识|值|含义|
@@ -47,18 +47,18 @@
 |LARGEST_AGE|```100 * 365 * 24 * 3600 * 1000```|用户的生日最早为100年前|
 
 ### exercise
-|查询操作|url|数据要求|
-|-------|-------|------|
-|新建活动|/add_exercise|latitude, longitude, sponsor_id, start_time, end_time, name|
-|更改活动开始时间|/chg_start_time|id, start_time|
-|更改活动结束时间|/chg_end_time|id, end_time|
-|更改活动名|/chg_name|id, name|
-|更改活动位置|/chg_location|latitude, longitude|
-|更改活动状态|/chg_status|id, status|
-|查询一定范围内的活动|/query_nearby_exercise|latitude_lower_bound, latitude_upper_bound, longitude_lower_bound, longitude_upper_bound|
-|查询拥有某个标签的一定范围内的活动|/query_nearby_tag_exercise|latitude_lower_bound, latitude_upper_bound, longitude_lower_bound, longitude_upper_bound, tag|
-|查询某用户发起的所有活动|/query_user_exercise|sponsor_id|
-|查询某用户在某段时间内的所有活动|/query_user_current_exercise|sponsor_id, time_lower_bound, time_upper_bound|
+|查询操作|url|数据要求|返回数据结构|错误类型|
+|-------|-------|------|------|-------|
+|新建活动|/add_exercise|latitude, longitude, sponsor_id, start_time, end_time, name|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR|
+|更改活动开始时间|/chg_start_time|id, start_time|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR|
+|更改活动结束时间|/chg_end_time|id, end_time|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR|
+|更改活动名|/chg_name|id, name|RESULT_SUCCESS|RESULT_FAILED|
+|更改活动位置|/chg_location|latitude, longitude|RESULT_SUCCESS|RESULT_FAILED|
+|更改活动状态|/chg_status|id, status|RESULT_SUCCESS|RESULT_FAILED, RESULT_NOT_SUCH_STATUS|
+|查询一定范围内的活动|/query_nearby_exercise|latitude, longitude|```"data":[{"id":1,"latitude":1,"sponsor_id":"1","start_time":"2016-07-11T00:00:00.000Z","end_time":"2016-07-12T00:00:00.000Z","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:42.000Z","status":1},{"id":2,"latitude":1,"sponsor_id":"1","start_time":"0000-00-00 00:00:00","end_time":"0000-00-00 00:00:00","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:53.000Z","status":0}]```|RESULT_FAILED|
+|查询拥有某个标签的一定范围内的活动|/query_nearby_tag_exercise|latitude, longitude, tag|```"data":[{"id":1,"latitude":1,"sponsor_id":"1","start_time":"2016-07-11T00:00:00.000Z","end_time":"2016-07-12T00:00:00.000Z","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:42.000Z","status":1},{"id":2,"latitude":1,"sponsor_id":"1","start_time":"0000-00-00 00:00:00","end_time":"0000-00-00 00:00:00","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:53.000Z","status":0}]```|RESULT_FAILED|
+|查询某用户发起的所有活动|/query_user_exercise|sponsor_id|```"data":[{"id":1,"latitude":1,"sponsor_id":"1","start_time":"2016-07-11T00:00:00.000Z","end_time":"2016-07-12T00:00:00.000Z","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:42.000Z","status":1},{"id":2,"latitude":1,"sponsor_id":"1","start_time":"0000-00-00 00:00:00","end_time":"0000-00-00 00:00:00","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:53.000Z","status":0}]```|RESULT_FAILED|
+|查询某用户在某段时间内的所有活动|/query_user_current_exercise|sponsor_id, time_lower_bound, time_upper_bound|```"data":[{"id":1,"latitude":1,"sponsor_id":"1","start_time":"2016-07-11T00:00:00.000Z","end_time":"2016-07-12T00:00:00.000Z","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:42.000Z","status":1},{"id":2,"latitude":1,"sponsor_id":"1","start_time":"0000-00-00 00:00:00","end_time":"0000-00-00 00:00:00","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:53.000Z","status":0}]```|RESULT_FAILED|
 
 #### exercise状态码定义
 |返回码标识|返回区域|返回码|含义|
