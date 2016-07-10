@@ -30,16 +30,16 @@
 ### activity
 |查询操作|url|数据要求|
 |-------|-------|------|
-|新建活动|/addactivity|latitude, longitude, sponsor_id, start_time, end_time, name|
-|更改活动开始时间|/chgbegintime|id, start_time|
-|更改活动结束时间|/chgendtime|id, end_time|
-|更改活动名|/chgactname|id, name|
-|更改活动位置|/chgloc|latitude, longitude|
-|更改活动状态|/chgstate|id, status|
-|查询一定范围内的活动|/query_acti|latitude_lower_bound, latitude_upper_bound, longitude_lower_bound, longitude_upper_bound|
-|查询拥有某个标签的一定范围内的活动|/query_tagActi|latitude_lower_bound, latitude_upper_bound, longitude_lower_bound, longitude_upper_bound, tag|
-|查询某用户发起的所有活动|/query_userActi|sponsor_id|
-|查询某用户在某段时间内的所有活动|/query_userActiTime|sponsor_id, time_lower_bound, time_upper_bound|
+|新建活动|/add_exercise|latitude, longitude, sponsor_id, start_time, end_time, name|
+|更改活动开始时间|/chg_start_time|id, start_time|
+|更改活动结束时间|/chg_end_time|id, end_time|
+|更改活动名|/chg_name|id, name|
+|更改活动位置|/chg_location|latitude, longitude|
+|更改活动状态|/chg_status|id, status|
+|查询一定范围内的活动|/query_nearby_exercise|latitude_lower_bound, latitude_upper_bound, longitude_lower_bound, longitude_upper_bound|
+|查询拥有某个标签的一定范围内的活动|/query_nearby_tag_exercise|latitude_lower_bound, latitude_upper_bound, longitude_lower_bound, longitude_upper_bound, tag|
+|查询某用户发起的所有活动|/query_user_exercise|sponsor_id|
+|查询某用户在某段时间内的所有活动|/query_user_current_exercise|sponsor_id, time_lower_bound, time_upper_bound|
 
 
 ### tag

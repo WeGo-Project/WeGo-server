@@ -1,0 +1,70 @@
+block content
+    h1 create new exercise
+    form(action='/exercise/add_exercise', method='post')
+        input(type='text', name='latitude')
+        input(type='text', name='longitude')
+        input(type='text', name='sponsor_id')
+        input(type='text', name='start_time')
+        input(type='text', name='end_time')
+        input(type='text', name='name')
+        input(type='text', name='description')
+        input(type='submit')
+
+    h1 change start time
+    form(action='/exercise/chg_start_time', method='post')
+        input(type='text', name='id')
+        input(type='text', name='start_time')
+        input(type='submit')
+
+    h1 change end time
+    form(action='/exercise/chg_end_time', method='post')
+        input(type='text', name='id')
+        input(type='text', name='end_time')
+        input(type='submit')
+
+    h1 change name
+    form(action='/exercise/chg_name', method='post')
+        input(type='text', name='id')
+        input(type='text', name='name')
+        input(type='submit')
+
+    h1 change location
+    form(action='/exercise/chg_location', method='post')
+        input(type='text', name='id')
+        input(type='text', name='latitude')
+        input(type='text', name='longitude')
+        input(type='submit')
+
+    h1 change status
+    form(action='/exercise/chg_status', method='post')
+        input(type='text', name='id')
+        input(type='text', name='status')
+        input(type='submit')
+
+    h1 query nearby
+    form(action='/exercise/query_nearby_exercise', method='post')
+        input(type='text', name='latitude_lower_bound')
+        input(type='text', name='latitude_upper_bound')
+        input(type='text', name='longitude_lower_bound')
+        input(type='text', name='longitude_upper_bound')
+        input(type='submit')
+
+    h1 query nearby with tag
+    form(action='/exercise/query_nearby_tag_exercise', method='post')
+        input(type='text', name='latitude_lower_bound')
+        input(type='text', name='latitude_upper_bound')
+        input(type='text', name='longitude_lower_bound')
+        input(type='text', name='longitude_upper_bound')
+        input(type='text', name='tag')
+        input(type='submit')
+    h1 query user exercise
+    form(action='/exercise/query_user_exercise', method='post')
+        input(type='text', name='sponsor_id')
+        input(type='submit')
+
+    h1 query user current exercise
+    form(action='/exercise/query_user_current_exercise', method='post')
+        input(type='text', name='sponsor_id')
+        input(type='text', name='time_lower_bound')
+        input(type='text', name='time_upper_bound')
+        input(type='submit')
