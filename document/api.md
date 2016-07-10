@@ -5,7 +5,7 @@
 ```(server.com)/(target)/(action type)?(query string)```  
 ```server.com``` 服务器域名  
 ```target``` 查询的业务实体对象  
-```action type``` 对对象的查询类型  
+```action type``` 对象的查询类型  
 ```query string``` 提交的表单查询字符串  
 用户登录举例： ```server.com/user/login```  
 用户注册举例： ```server.com/user/register```  
