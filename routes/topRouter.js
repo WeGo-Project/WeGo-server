@@ -39,4 +39,13 @@ router.get('/attendency', function(req, res) {
 var attendency = require('./attendency.js');
 router.use('/attendency', attendency);
 
+var exercise_tag = require('./exercise_tag.js');
+router.use('/exercise_tag', exercise_tag);
+
+var user_tag = require('./user_tag.js');
+router.use('/user_tag', user_tag);
+
+var user_notice = require('./user_notice.js');
+router.use('/user_notice', user_notice);
+
 module.exports = router;
