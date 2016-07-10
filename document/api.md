@@ -43,27 +43,27 @@
 
 
 ### tag
-|查询操作|url|数据要求|
-|-------|-------|-------|
-|查询全部标签|/query_all_tag||
+|查询操作|url|数据要求|返回数据结构|
+|-------|-------|-------|-------|
+|查询全部标签|/query_all_tag||data:[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"},{"id":3,"name":"tag3"}]|
 
 
 ### exercise_tag
-|查询操作|url|数据要求|
-|-------|-------|------|
-|为某个活动添加一个标签|/add_exer_tag|tag_id, exercise_id|
-|为某个活动添加一个新的标签|/add_exer_new_tag|name, exercise_id|
-|删除活动的一个标签|/del_tag|tag_id, exercise_id|
-|查询某个活动的tag|/query_exer_tag|exercise_id|
+|查询操作|url|数据要求|返回数据结构|
+|-------|-------|------|------|
+|为某个活动添加一个标签|/add_exer_tag|tag_id, exercise_id|result: 200|
+|为某个活动添加一个新的标签|/add_exer_new_tag|name, exercise_id|未实现|
+|删除活动的一个标签|/del_tag|tag_id, exercise_id|result: 200|
+|查询某个活动的tag|/query_exer_tag|exercise_id|data:[{"tag_id":1,"name":"tag1"},{"tag_id":2,"name":"tag2"},{"tag_id":3,"name":"tag3"}]|
 
 
 ### user_tag
-|查询操作|url|数据要求|
+|查询操作|url|数据要求|返回数据结构|
 |-------|-------|------|
-|为某个用户添加标签|/add_user_tag|tag_id, user_id|
-|为某个用户添加一个新的标签|/add_user_new_tag|name, user_id|
-|删除用户的一个标签|/del_tag|tag_id, user_id|
-|查询某个用户的tag|/query_usr_tag|user_id|
+|为某个用户添加标签|/add_user_tag|tag_id, user_id|result: 200|
+|为某个用户添加一个新的标签|/add_user_new_tag|name, user_id|未实现|
+|删除用户的一个标签|/del_tag|tag_id, user_id|result: 200|
+|查询某个用户的tag|/query_usr_tag|user_id|data:[{"tag_id":3,"name":"tag3"},{"tag_id":1,"name":"tag1"},{"tag_id":2,"name":"tag2"}]}|
 
 ### attendency
 |查询操作|url|数据要求|
@@ -83,10 +83,10 @@
 |查询某个活动的所有评论|/query_comment|activity_id|
 
 ### user_notice
-|查询操作|url|数据要求|
-|-------|-------|------|
-|查询某个用户的通知|/query_notice|user_id|
-|用户阅读某个通知|/read_notice|notice_id|
+|查询操作|url|数据要求|返回数据结构|
+|-------|-------|------|------|
+|查询某个用户的通知|/query_notice|user_id||
+|用户阅读某个通知|/read_notice|notice_id||
 
 ## 数据库表更改建议
 添加user_cookie表来存储用户登录状态，表结构为id, user_id, created_datetime, cookie

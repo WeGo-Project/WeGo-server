@@ -23,6 +23,9 @@ router.get('/attendency', function(req, res) {
 var attendency = require('./attendency.js');
 router.use('/attendency', attendency);
 
+var tag = require('./tag.js');
+router.use('/tag', tag);
+
 var exercise_tag = require('./exercise_tag.js');
 router.use('/exercise_tag', exercise_tag);
 
