@@ -1,6 +1,6 @@
 ## API说明
 ### URL 格式
-如果未特别说明，所有API均用HTTP/POST方法查询，提交的数据放在query string中，附带用户cookie。  
+如果未特别说明，所有API均用HTTP/POST方法查询，提交的数据以键值对的方式放在POST content中，如果用户已登录，在POST content中加如以键为open_id，值为用户id的键值对。  
 基础URL格式：
 ```(server.com)/(target)/(action type)?(query string)```  
 ```server.com``` 服务器域名  
@@ -19,6 +19,20 @@
 ```data``` 查询得到的数据，以JSON数组方式存储，如果```result```指示失败则可能没有该项  
 用户登录返回结果示例： ```{"request":"3","target":"1","result":"-1"}```  
 
+## 全局状态码定义
+|返回码标识|返回区域|返回码|含义|
+|--------|-------|-----|---|
+|RESULT_SUCCESS|result|200|成功|
+|RESULT_SUCCESS|result|400|失败|
+|RESULT_PERMISSION_DENY|result|401|没有权限进行这个操作|
+|RESULT_SERVER_FAILED|result|501|服务器发生了错误|
+|RESULT_USER_LOGIN_REQUESTED|402|200|这个操作需要用户登录|
+|RESULT_TIMESTAMP_ERROR|result|8000|请求操作中的时间信息有误|
+|ACTION_QUERY|result|1|查询操作|
+|ACTION_REMOVE|result|2|删除操作|
+|ACTION_INSERT|result|3|插入操作|
+|ACTION_UPDATE|result|4|更新操作|
+
 ## API列表
 ### user
 |查询操作|url|数据要求|
@@ -27,7 +41,7 @@
 |注册|/register|username, password, gender, birthday|
 |更改用户名|/chguname|id, username|
 
-### activity
+### exercise
 |查询操作|url|数据要求|
 |-------|-------|------|
 |新建活动|/add_exercise|latitude, longitude, sponsor_id, start_time, end_time, name|
@@ -41,6 +55,18 @@
 |查询某用户发起的所有活动|/query_user_exercise|sponsor_id|
 |查询某用户在某段时间内的所有活动|/query_user_current_exercise|sponsor_id, time_lower_bound, time_upper_bound|
 
+## exercise状态码定义
+|返回码标识|返回区域|返回码|含义|
+|--------|-------|-----|---|
+|RESULT_NOT_SUCH_STATUS|result|8100|活动状态不正确|
+
+## exercise常量定义
+|标识|值|含义|
+|--- |-|----|
+|EXERCISE_NEW_STATUS|0|新建的活动|
+|EXERCISE_FINISHED_ATTEND_STATUS|1|此活动已截止参加|
+|EXERCISE_CANCEL_STATUS|2|此活动已取消|
+|MAX_TIMESTAMP_FORWARD|24 * 3600 * 1000|活动发到服务器的时间超过一个小时|
 
 ### activity_tag
 |查询操作|url|数据要求|
@@ -84,10 +110,3 @@
 为acticity表添加status列，用来标记活动状态，如等待中、商议中、已取消等，同时添加created_datetime列来记录活动创建时间  
 为attendency表添加created_day列，用于记录用户何时报名参加该活动  
 为notice添加status列，用于记录用户是否看过这个通知
-
-## 返回状态码定义
-|返回码|含义|
-|-------|-------|
-|200|成功|
-|401|用户未登录|
-|400|参数类型或格式错误|

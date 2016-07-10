@@ -8,6 +8,17 @@ router.use(function(req, res, next) {
     next();
 });
 
+// 时间转换中间件
+router.use(function(req, res, next) {
+    if (req.body.start_time) {
+        req.body.start_time = new Date(req.body.start_time);
+    }
+    if (req.body.end_time) {
+        req.body.end_time = new Date(req.body.end_time);
+    }
+    next();
+});
+
 router.post('/add_exercise', function (req, res) {
     targetDB.add_exercise(req.body, function(result) {
         res.json(result);
