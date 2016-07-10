@@ -42,10 +42,9 @@
 |更改用户名|/chguname|id, username|
 
 #### user常量定义
-#### exercise常量定义
 |标识|值|含义|
-|--- |-|----|
-|LARGEST_AGE|100 \* 365 \* 24 \* 3600 \* 1000|用户的生日最早为100年前|
+|-----|-----|-----|
+|LARGEST_AGE|```100 * 365 * 24 * 3600 * 1000```|用户的生日最早为100年前|
 
 ### exercise
 |查询操作|url|数据要求|
@@ -68,7 +67,7 @@
 
 #### exercise常量定义
 |标识|值|含义|
-|--- |-|----|
+|-----|-----|-----|
 |EXERCISE_NEW_STATUS|0|新建的活动|
 |EXERCISE_FINISHED_ATTEND_STATUS|1|此活动已截止参加|
 |EXERCISE_CANCEL_STATUS|2|此活动已取消|
@@ -91,7 +90,7 @@
 
 ### user_tag
 |查询操作|url|数据要求|返回数据结构|
-|-------|-------|------|
+|-------|-------|------|-----|
 |为某个用户添加标签|/add_user_tag|tag_id, user_id|result: 200|
 |为某个用户添加一个新的标签|/add_user_new_tag|name, user_id|未实现|
 |删除用户的一个标签|/del_tag|tag_id, user_id|result: 200|
