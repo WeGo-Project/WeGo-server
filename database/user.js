@@ -3,6 +3,7 @@ var Define = require('./define.js');
 
 var KeyDefine = new Define;
 KeyDefine.TABLE_NAME = 'users';
+KeyDefine.LARGEST_AGE = 100 * 365 * 24 * 3600 * 1000;
 
 var CurrentDB = {}
 CurrentDB.login = function(query, callback) {
@@ -37,7 +38,8 @@ CurrentDB.login = function(query, callback) {
             }
 
             result.result = KeyDefine.RESULT_SUCCESS;
-            result.data = {id: rows[0].id, name: rows[0].name}
+            result.data = rows;
+            result.data[0].password = null;
             callback(result);
         });
     });
@@ -53,6 +55,10 @@ CurrentDB.register = function(query, callback) {
         }
 
         if (!(query.id && query.name && query.gender && query.birthday)) {
+            callback(result);
+            return;
+        } else if ((new Date() - query.birthday) > KeyDefine.LARGEST_AGE) {
+            result.result = KeyDefine.RESULT_TIMESTAMP_TOO_EARLY;
             callback(result);
             return;
         }
@@ -92,6 +98,11 @@ CurrentDB.chguname = function(query, callback) {
         }
 
         var queryOption;
+        if (query.open_id !== query.id) {
+            result.result = KeyDefine.RESULT_PERMISSION_DENY;
+            callback(result);
+            return;
+        }
         if (!(query.id && query.name)) {
             callback(result);
             return;

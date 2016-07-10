@@ -1,9 +1,7 @@
 var express = require('express');
 var app = express();
-var bodyParser = require('body-parser');
 
 // initialize routers
-app.use(bodyParser.urlencoded({extended: false}));
 var topRouter = require('./routes/topRouter.js');
 app.use('/', topRouter);
 

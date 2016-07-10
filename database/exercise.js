@@ -3,7 +3,11 @@ var Define = require('./define.js');
 
 var KeyDefine = new Define;
 KeyDefine.TABLE_NAME = 'exercise';
-KeyDefine.NEW_EXERCISE_STATUS = '0';
+KeyDefine.EXERCISE_NEW_STATUS = '0';
+KeyDefine.EXERCISE_FINISHED_ATTEND_STATUS = '1';
+KeyDefine.EXERCISE_CANCEL_STATUS = '2';
+KeyDefine.MAX_TIMESTAMP_FORWARD = 24 * 3600 * 1000;
+KeyDefine.RESULT_NOT_SUCH_STATUS = '8100'
 
 var CurrentDB = {}
 CurrentDB.add_exercise = function(query, callback) {
@@ -16,15 +20,22 @@ CurrentDB.add_exercise = function(query, callback) {
         }
 
         var queryOption;
+
         if (query.latitude && query.longitude && query.sponsor_id &&
-              query.start_time && query.end_time && query.description && query.name) {
+                query.start_time && query.end_time && query.description && query.name) {
+            if (query.start_time >= query.end_time || query.start_time <= new Date() - KeyDefine.MAX_TIMESTAMP_FORWARD) {
+                result.result = KeyDefine.RESULT_TIMESTAMP_ERROR;
+                callback(result);
+                return;
+            }
+
             queryOption = {
                 sql: 'insert into ?? (latitude, longitude, sponsor_id, start_time,\
                     end_time, description, name, created_datetime, status) values\
                     (?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 values: [KeyDefine.TABLE_NAME, query.latitude, query.longitude, query.sponsor_id,
                       query.start_time, query.end_time, query.description, query.name,
-                      new Date(), KeyDefine.NEW_EXERCISE_STATUS],
+                      new Date(), KeyDefine.EXERCISE_NEW_STATUS],
                 timeout: 10000
             }
         } else {
@@ -63,9 +74,15 @@ CurrentDB.chg_start_time = function(query, callback) {
             return;
         }
 
+        if (query.start_time < new Date()) {
+            result.result = KeyDefine.RESULT_TIMESTAMP_ERROR;
+            callback(result);
+            return;
+        }
+
         var queryOption = {
-            sql: 'update ?? set start_time = ? where id = ?',
-            values: [KeyDefine.TABLE_NAME, query.start_time, query.id],
+            sql: 'update ?? set start_time = ? where id = ? and end_time > ?',
+            values: [KeyDefine.TABLE_NAME, query.start_time, query.id, query.start_time],
             timeout: 10000
         };
 
@@ -101,9 +118,15 @@ CurrentDB.chg_end_time = function(query, callback) {
             return;
         }
 
+        if (query.end_time < new Date()) {
+            result.result = KeyDefine.RESULT_TIMESTAMP_ERROR;
+            callback(result);
+            return;
+        }
+
         var queryOption = {
-            sql: 'update ?? set end_time = ? where id = ?',
-            values: [KeyDefine.TABLE_NAME, query.end_time, query.id],
+            sql: 'update ?? set end_time = ? where id = ? and start_time < ?',
+            values: [KeyDefine.TABLE_NAME, query.end_time, query.id, query.end_time],
             timeout: 10000
         };
 
@@ -211,6 +234,13 @@ CurrentDB.chg_status = function(query, callback) {
         }
 
         if (!(query.id && query.status)) {
+            callback(result);
+            return;
+        }
+        if (query.status !== KeyDefine.EXERCISE_NEW_STATUS &&
+              query.status !== KeyDefine.EXERCISE_CANCEL_STATUS &&
+              query.status !== KeyDefine.EXERCISE_FINISHED_ATTEND_STATUS) {
+            result.result = KeyDefine.RESULT_NOT_SUCH_STATUS;
             callback(result);
             return;
         }

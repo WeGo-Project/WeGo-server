@@ -9,6 +9,9 @@ define = function() {
     this.RESULT_PERMISSION_DENY = '401';
     this.RESULT_SERVER_FAILED = '501';
     this.RESULT_USER_LOGIN_REQUESTED = '402';
+    this.RESULT_TIMESTAMP_ERROR = '8000';
+    this.USER_LONGIN = true;
+    this.USER_NOT_LONGIN = false;
 }
 
 module.exports = define;
