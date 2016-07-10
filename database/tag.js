@@ -60,4 +60,43 @@ CurrentDB.query = function(query, callback) {
     });
 }
 
+CurrentDB.query_all = function(query, callback) {
+    DBPool.getConnection(function(err, connection) {
+        var result = {
+            request: KeyDefine.ACTION_QUERY,
+            target: KeyDefine.TABLE_NAME,
+            result: KeyDefine.RESULT_FAILED
+        }
+        if (err) {
+            console.error('Error in getting connection: ' + err.code);
+            callback(result);
+            return;
+        }
+
+        var queryOption = {
+            sql: 'SELECT * FROM ??',
+            values: [KeyDefine.TABLE_NAME],
+            timeout: 10000
+        };
+        connection.query(queryOption, function(err, rows) {
+            if (err) {
+                // query failed error
+                console.error('Error in querying %s: ' + err.code, KeyDefine.TABLE_NAME);
+                result.result = KeyDefine.RESULT_QUERY_FAILED;
+                callback(result);
+                return;
+            } else if (rows.length <= 0) {
+                console.log('Empty in querying tag');
+                result.result = KeyDefine.RESULT_QUERY_EMPTY;
+                callback(result);
+                return;
+            }
+
+            result.result = KeyDefine.RESULT_SUCCESS;
+            result.data = rows;
+            callback(result);
+        });
+    });
+}
+
 module.exports = CurrentDB;
