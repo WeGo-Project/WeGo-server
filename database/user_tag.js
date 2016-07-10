@@ -72,7 +72,7 @@ CurrentDB.add = function(query, callback) {
                     callback(result);
                     return;
                 }
-            } else if (rows.length <= 0) {
+            } else if (rows.affectedRows === 0) {
                 console.error('Failed in add user tag');
                 result.result = KeyDefine.RESULT_ADD_FAILED;
                 callback(result);

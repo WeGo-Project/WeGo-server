@@ -2,6 +2,12 @@ var express = require('express');
 var router = express.Router();
 var targetDB = require('../database/user_tag.js');
 
+// 以下中间件用于用户登录验证和鉴权
+router.use(function(req, res, next) {
+    //TODO: 验证与鉴权代码代码
+    next();
+});
+
 router.post('/add_user_tag', function(req, res) {
     targetDB.add(req.body, function(result) {
         res.json(result);

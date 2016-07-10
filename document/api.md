@@ -82,10 +82,11 @@
 |某个用户给某个活动添加评论|/addcomment|user_id, activity_id, comment, grade, time|
 |查询某个活动的所有评论|/query_comment|activity_id|
 
-### notice
+### user_notice
 |查询操作|url|数据要求|
 |-------|-------|------|
 |查询某个用户的通知|/query_notice|user_id|
+|用户阅读某个通知|/read_notice|notice_id|
 
 ## 数据库表更改建议
 添加user_cookie表来存储用户登录状态，表结构为id, user_id, created_datetime, cookie
