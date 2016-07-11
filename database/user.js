@@ -82,7 +82,7 @@ CurrentDB.register = function(query, callback) {
                 return;
             }
 
-            result.result = KeyDefine.RESULT_SUCCESS;
+            result.result = KeyDefine.RESULT_FAILED;
             callback(result);
         });
     });
