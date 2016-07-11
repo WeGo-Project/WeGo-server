@@ -1,4 +1,8 @@
 block content
+    h1 tag query_all_tag
+    form(action='/tag/query_all_tag', method='post')
+        input(type='submit')
+
     h1 exercise_tag query_exer_tag
     form(action='/exercise_tag/query_exer_tag', method='post')
         input(type='text', name='exercise_id', placeholder='exercise_id')
@@ -31,4 +35,17 @@ block content
     form(action='/user_tag/del_tag', method='post')
         input(type='text', name='user_id', placeholder='user_id')
         input(type='text', name='tag_id', placeholder='tag_id')
+        input(type='submit')
+
+    h1 user_notice query_notice
+    form(action='/user_notice/query_notice', method='post')
+        input(type='text', name='user_id', placeholder='user_id')
+        input(type='submit')
+
+    h1 user_notice add_notice
+    form(action='/user_notice/add_notice', method='post')
+        input(type='text', name='user_id', placeholder='user_id')
+        input(type='text', name='exercise_id', placeholder='exercise_id')
+        input(type='text', name='notice_content', placeholder='notice_content')
+        input(type='text', name='time', placeholder='time')
         input(type='submit')
