@@ -35,7 +35,7 @@ CurrentDB.add = function(query, callback) {
         if (query.user_id && query.exercise_id && query.notice_content && query.time) {
             queryOption = {
                 sql: 'INSERT INTO ?? (user_id, exercise_id, notice_content, time, status) VALUE (?, ?, ?, ?, ?)',
-                values: [KeyDefine.TABLE_NAME, query.user_id, query.exercise_id, query.notice_content, query.time, KeyDefine.NOTICE_STATUS_UNREAD],
+                values: [KeyDefine.TABLE_NAME, query.user_id, query.exercise_id, query.notice_content, new Date(), KeyDefine.NOTICE_STATUS_UNREAD],
                 timeout: 10000
             }
         } else if (!query.user_id || !query.exercise_id || !query.notice_content || !query.time) {
@@ -107,9 +107,7 @@ CurrentDB.add_sponsor_notice = function(query, callback) {
                                 var add_query = {
                                     user_id: query.user_id,
                                     exercise_id: rows1[index].id,
-                                    notice_content: KeyDefine.NOTICE_CONTENT_TIME,
-                                    time: new Date(),
-                                    status: KeyDefine.NOTICE_STATUS_UNREAD
+                                    notice_content: KeyDefine.NOTICE_CONTENT_TIME
                                 };
                                 CurrentDB.add(add_query, function(result) {
                                     if (result.result !== KeyDefine.RESULT_SUCCESS) {
@@ -188,9 +186,7 @@ CurrentDB.add_partner_notice = function(query, callback) {
                                 var add_query = {
                                     user_id: query.user_id,
                                     exercise_id: rows1[index].id,
-                                    notice_content: KeyDefine.NOTICE_CONTENT_TIME,
-                                    time: new Date(),
-                                    status: KeyDefine.NOTICE_STATUS_UNREAD
+                                    notice_content: KeyDefine.NOTICE_CONTENT_TIME
                                 };
                                 CurrentDB.add(add_query, function(result) {
                                     if (result.result !== KeyDefine.RESULT_SUCCESS) {

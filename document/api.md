@@ -95,7 +95,7 @@
 |为某个用户添加标签|/add_user_tag|tag_id, user_id|result: 200|
 |为某个用户添加一个新的标签|/add_user_new_tag|name, user_id|未实现|
 |删除用户的一个标签|/del_tag|tag_id, user_id|result: 200|
-|查询某个用户的tag|/query_usr_tag|user_id|```data:[{"tag_id":3,"name":"tag3"},{"tag_id":1,"name":"tag1"},{"tag_id":2,"name":"tag2"}]}|
+|查询某个用户的tag|/query_usr_tag|user_id|```data:[{"tag_id":3,"name":"tag3"},{"tag_id":1,"name":"tag1"},{"tag_id":2,"name":"tag2"}]```|
 
 ### attendency
 |查询操作|url|数据要求|
@@ -117,10 +117,11 @@
 ### user_notice
 |查询操作|url|数据要求|返回数据结构|
 |-------|-------|------|------|
-|查询某个用户的通知|/query_notice|user_id|```data:[{"id":9,"user_id":"1","exercise_id":3,"notice_content":"200","time":"2016-07-11T05:14:14.000Z","status":1},{"id":10,"user_id":"1","exercise_id":3,"notice_content":"100","time":"2016-07-11T07:10:01.000Z","status":1}]}|
+|查询某个用户的通知|/query_notice|user_id|```data:[{"id":9,"user_id":"1","exercise_id":3,"notice_content":"200","time":"2016-07-11T05:14:14.000Z","status":1},{"id":10,"user_id":"1","exercise_id":3,"notice_content":"100","time":"2016-07-11T07:10:01.000Z","status":1}]```|
 |用户阅读某个通知|/read_notice|notice_id|result: 200|
+|添加一个通知|DB.add(仅对后台模块开放)|user_id, exercise_id, notice_content(通知类型所对应的状态码)|result: 200|
 
-#### notice状态码
+#### user_notice状态码
 |作用区域|状态码|含义|
 |-------|-------|------|
 |notice_content|100|用户(user_id)发起/参与的活动(exercise_id)将于1小时内开始|
