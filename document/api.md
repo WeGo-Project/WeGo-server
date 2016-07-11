@@ -122,6 +122,7 @@
 
 #### notice状态码
 |作用区域|状态码|含义|
+|-------|-------|------|
 |notice_content|100|用户(user_id)发起/参与的活动(exercise_id)将于1小时内开始|
 |notice_content|200|未定义|
 |status|1|未读|
