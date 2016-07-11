@@ -61,12 +61,26 @@ CurrentDB.add_exercise = function(query, callback) {
                 console.error('Error in inserting %s: ' + err.code, KeyDefine.TABLE_NAME);
                 callback(result);
                 return;
-            } else if (rows.length <= 0) {
+            } else if (rows.affectedRows <= 0) {
                 callback(result);
                 return;
             }
 
             result.result = KeyDefine.RESULT_SUCCESS;
+
+            if (query.tag) {
+                var count = 0;
+                for (index in query.tag) {
+                    var exercise_tag_query = {exercise_id: rows.insertId, tag_id: index}
+                    ExerciseTagDB.add(exercise_tag_query, function(current_count) {
+                        return function(exercise_tag_query_result) {
+                            if (exercise_tag_query_result.result !== KeyDefine.RESULT_SUCCESS) {
+                                console.log('Failed to add tag_id while adding exercise');
+                            }
+                        }
+                    }(count));
+                }
+            }
             //result.data = {id: rows[0].id, name: rows[0].name}
             callback(result);
         });
