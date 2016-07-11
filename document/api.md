@@ -49,7 +49,7 @@
 ### exercise
 |查询操作|url|数据要求|返回数据结构|错误类型|
 |-------|-------|------|------|-------|
-|新建活动|/add_exercise|latitude, longitude, sponsor_id, start_time, end_time, name, min_num, max_num, deadline, avg_cost, pic_store, tag(数组)|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR(当加入tag失败时，exercise创建成功后仍会返回RESULT_SUCCESS)|
+|新建活动|/add_exercise|latitude, longitude, sponsor_id, start_time, end_time, query.description， query.name， name, min_num, max_num, deadline, avg_cost, pic_store, tag(数组)|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR(当加入tag失败时，exercise创建成功后仍会返回RESULT_SUCCESS)|
 |更改活动开始时间|/chg_start_time|id, start_time|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR|
 |更改活动结束时间|/chg_end_time|id, end_time|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR|
 |更改活动名|/chg_name|id, name|RESULT_SUCCESS|RESULT_FAILED|
