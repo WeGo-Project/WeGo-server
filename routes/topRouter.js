@@ -1,13 +1,17 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
-router.use(bodyParser.urlencoded({extended: false}));
+router.use(bodyParser.urlencoded({
+    extended: false
+}));
 
 // 以下中间件用于用户登录验证和鉴权
 var userDB = require('../database/user.js');
 var Define = require('../database/define.js');
 router.use(function(req, res, next) {
-    var query = {id: req.body.open_id}
+    var query = {
+        id: req.body.open_id
+    }
     userDB.login(query, function(result) {
         if (result.result === Define.RESULT_SUCCESS) {
             req.body.login_status = define.USER_LONGIN;
@@ -25,6 +29,9 @@ router.get('/user', function(req, res) {
 });
 router.get('/exercise', function(req, res) {
     res.render('exercise.jade');
+});
+router.get('/notice', function(req, res) {
+    res.render('notice.jade');
 });
 
 var user = require('./user.js');

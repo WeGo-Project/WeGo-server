@@ -9,19 +9,17 @@ router.use(function(req, res, next) {
 });
 
 router.post('/query_notice', function(req, res) {
-    targetDB.query(req.body, function(result) {
-        res.json(result);
+    targetDB.add_sponsor_notice(req.body, function(result) {
+        targetDB.add_partner_notice(req.body, function(result) {
+            targetDB.query(req.body, function(result) {
+                res.json(result);
+            });
+        });
     });
 });
 
 router.post('/read_notice', function(req, res) {
     targetDB.read(req.body, function(result) {
-        res.json(result);
-    });
-});
-
-router.post('/add_notice', function(req, res) {
-    targetDB.add(req.body, function(result) {
         res.json(result);
     });
 });
