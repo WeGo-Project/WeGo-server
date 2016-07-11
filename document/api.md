@@ -119,9 +119,3 @@
 |-------|-------|------|------|
 |查询某个用户的通知|/query_notice|user_id||
 |用户阅读某个通知|/read_notice|notice_id||
-
-## 数据库表更改建议
-添加user_cookie表来存储用户登录状态，表结构为id, user_id, created_datetime, cookie
-为acticity表添加status列，用来标记活动状态，如等待中、商议中、已取消等，同时添加created_datetime列来记录活动创建时间
-为attendency表添加created_day列，用于记录用户何时报名参加该活动
-为notice添加status列，用于记录用户是否看过这个通知

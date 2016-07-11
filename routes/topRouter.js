@@ -48,7 +48,14 @@ router.use('/exercise_tag', exercise_tag);
 var user_tag = require('./user_tag.js');
 router.use('/user_tag', user_tag);
 
-var user_notice = require('./user_notice.js');
-router.use('/user_notice', user_notice);
+//var user_notice = require('./user_notice.js');
+//router.use('/user_notice', user_notice);
+
+
+router.get('/exercise_comment', function(req, res) {
+    res.render('exercise_comment.jade');
+});
+var exercise_comment = require('./exercise_comment.js');
+router.use('/exercise_comment', exercise_comment);
 
 module.exports = router;
