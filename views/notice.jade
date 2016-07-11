@@ -1,0 +1,10 @@
+block content
+    h1 query_notice
+    form(action='/user_notice/query_notice', method='post')
+        input(type='text', name='user_id', placeholder='user_id')
+        input(type='submit')
+
+    h1 read_notice
+    form(action='/user_notice/read_notice', method='post')
+        input(type='text', name='notice_id', placeholder='notice_id')
+        input(type='submit')

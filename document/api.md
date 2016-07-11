@@ -1,22 +1,22 @@
 ## API说明
 ### URL 格式
-如果未特别说明，所有API均用HTTP/POST方法查询，提交的数据以键值对的方式放在POST content中，如果用户已登录，在POST content中加如以键为open_id，值为用户id的键值对。  
+如果未特别说明，所有API均用HTTP/POST方法查询，提交的数据以键值对的方式放在POST content中，如果用户已登录，在POST content中加如以键为open_id，值为用户id的键值对。
 基础URL格式：
-```(server.com)/(target)/(action type)?(query string)```  
-```server.com``` 服务器域名  
-```target``` 查询的业务实体对象  
-```action type``` 对象的查询类型  
-```query string``` 提交的表单查询字符串  
-用户登录举例： ```server.com/user/login```  
-用户注册举例： ```server.com/user/register```  
+```(server.com)/(target)/(action type)?(query string)```
+```server.com``` 服务器域名
+```target``` 查询的业务实体对象
+```action type``` 对象的查询类型
+```query string``` 提交的表单查询字符串
+用户登录举例： ```server.com/user/login```
+用户注册举例： ```server.com/user/register```
 
 ### 查询返回的格式
 如果未特别说明，所有API均返回JSON字符串作为结果。
-#### 返回的JSON字符串键值对说明  
-```request``` 查询类型，类型代码定义见文档后续  
-```target``` 查询对象，对象代码定义见文档后续  
-```result``` 查询结果，结果代码定义见文档后续  
-```data``` 查询得到的数据，以JSON数组方式存储，如果```result```指示失败则可能没有该项  
+#### 返回的JSON字符串键值对说明
+```request``` 查询类型，类型代码定义见文档后续
+```target``` 查询对象，对象代码定义见文档后续
+```result``` 查询结果，结果代码定义见文档后续
+```data``` 查询得到的数据，以JSON数组方式存储，如果```result```指示失败则可能没有该项
 用户登录返回结果示例： ```{"request":"3","target":"1","result":"-1"}```
 
 ## 全局状态码定义
@@ -77,7 +77,7 @@
 ### tag
 |查询操作|url|数据要求|返回数据结构|
 |-------|-------|-------|-------|
-|查询全部标签|/query_all_tag||data:[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"},{"id":3,"name":"tag3"}]|
+|查询全部标签|/query_all_tag||```data:[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"},{"id":3,"name":"tag3"}]|
 
 
 ### exercise_tag
@@ -86,7 +86,7 @@
 |为某个活动添加一个标签|/add_exer_tag|tag_id, exercise_id|result: 200|
 |为某个活动添加一个新的标签|/add_exer_new_tag|name, exercise_id|未实现|
 |删除活动的一个标签|/del_tag|tag_id, exercise_id|result: 200|
-|查询某个活动的tag|/query_exer_tag|exercise_id|data:[{"tag_id":1,"name":"tag1"},{"tag_id":2,"name":"tag2"},{"tag_id":3,"name":"tag3"}]|
+|查询某个活动的tag|/query_exer_tag|exercise_id|```data:[{"tag_id":1,"name":"tag1"},{"tag_id":2,"name":"tag2"},{"tag_id":3,"name":"tag3"}]|
 
 
 ### user_tag
@@ -95,7 +95,7 @@
 |为某个用户添加标签|/add_user_tag|tag_id, user_id|result: 200|
 |为某个用户添加一个新的标签|/add_user_new_tag|name, user_id|未实现|
 |删除用户的一个标签|/del_tag|tag_id, user_id|result: 200|
-|查询某个用户的tag|/query_usr_tag|user_id|data:[{"tag_id":3,"name":"tag3"},{"tag_id":1,"name":"tag1"},{"tag_id":2,"name":"tag2"}]}|
+|查询某个用户的tag|/query_usr_tag|user_id|```data:[{"tag_id":3,"name":"tag3"},{"tag_id":1,"name":"tag1"},{"tag_id":2,"name":"tag2"}]```|
 
 ### attendency
 |查询操作|url|数据要求|
@@ -117,5 +117,14 @@
 ### user_notice
 |查询操作|url|数据要求|返回数据结构|
 |-------|-------|------|------|
-|查询某个用户的通知|/query_notice|user_id||
-|用户阅读某个通知|/read_notice|notice_id||
+|查询某个用户的通知|/query_notice|user_id|```data:[{"id":9,"user_id":"1","exercise_id":3,"notice_content":"200","time":"2016-07-11T05:14:14.000Z","status":1},{"id":10,"user_id":"1","exercise_id":3,"notice_content":"100","time":"2016-07-11T07:10:01.000Z","status":1}]```|
+|用户阅读某个通知|/read_notice|notice_id|result: 200|
+|添加一个通知|DB.add(仅对后台模块开放)|user_id, exercise_id, notice_content(通知类型所对应的状态码)|result: 200|
+
+#### user_notice状态码
+|作用区域|状态码|含义|
+|-------|-------|------|
+|notice_content|100|用户(user_id)发起/参与的活动(exercise_id)将于1小时内开始|
+|notice_content|200|未定义|
+|status|1|未读|
+|status|2|已读|
