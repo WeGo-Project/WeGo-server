@@ -43,20 +43,17 @@ block content
 
     h1 query nearby
     form(action='/exercise/query_nearby_exercise', method='post')
-        input(type='text', name='latitude_lower_bound')
-        input(type='text', name='latitude_upper_bound')
-        input(type='text', name='longitude_lower_bound')
-        input(type='text', name='longitude_upper_bound')
+        input(type='text', name='latitude')
+        input(type='text', name='longitude')
         input(type='submit')
 
     h1 query nearby with tag
     form(action='/exercise/query_nearby_tag_exercise', method='post')
-        input(type='text', name='latitude_lower_bound')
-        input(type='text', name='latitude_upper_bound')
-        input(type='text', name='longitude_lower_bound')
-        input(type='text', name='longitude_upper_bound')
+        input(type='text', name='latitude')
+        input(type='text', name='longitude')
         input(type='text', name='tag')
         input(type='submit')
+
     h1 query user exercise
     form(action='/exercise/query_user_exercise', method='post')
         input(type='text', name='sponsor_id')

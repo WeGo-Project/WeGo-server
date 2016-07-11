@@ -1,5 +1,6 @@
 var DBPool = require('./dbpool.js');
 var Define = require('./define.js');
+var ExerciseTagDB = require('./exercise_tag.js');
 
 var KeyDefine = new Define;
 KeyDefine.TABLE_NAME = 'exercise';
@@ -7,7 +8,8 @@ KeyDefine.EXERCISE_NEW_STATUS = '0';
 KeyDefine.EXERCISE_FINISHED_ATTEND_STATUS = '1';
 KeyDefine.EXERCISE_CANCEL_STATUS = '2';
 KeyDefine.MAX_TIMESTAMP_FORWARD = 24 * 3600 * 1000;
-KeyDefine.RESULT_NOT_SUCH_STATUS = '8100'
+KeyDefine.RESULT_NOT_SUCH_STATUS = '8100';
+KeyDefine.NEARBY_RANGE = 1;
 
 var CurrentDB = {}
 CurrentDB.add_exercise = function(query, callback) {
@@ -269,6 +271,31 @@ CurrentDB.chg_status = function(query, callback) {
     });
 }
 
+function callbackWithTag(result, callback) {
+  if (result.data.length <= 0) {
+      callback(result);
+      return;
+  }
+
+  var count = 0;
+  //console.log(result.data);
+  for (index in result.data) {
+      exercise_tag_query = {exercise_id: result.data[index].id}
+      ExerciseTagDB.query(exercise_tag_query, function(current_index) {
+          return function(exercise_tag_query_result) {
+              //console.log(exercise_tag_query_result);
+              result.data[current_index].tag = exercise_tag_query_result.data;
+              count++;
+
+              if (count === result.data.length) {
+                  callback(result);
+                  return;
+              }
+          }
+      }(index));
+  }
+}
+
 CurrentDB.query_nearby_exercise = function(query, callback) {
     DBPool.getConnection(function(err, connection) {
         var result = {request: KeyDefine.ACTION_REMOVE, target: KeyDefine.TABLE_NAME, result: KeyDefine.RESULT_FAILED}
@@ -278,8 +305,7 @@ CurrentDB.query_nearby_exercise = function(query, callback) {
             return;
         }
 
-        if (!(query.latitude_lower_bound && query.latitude_upper_bound &&
-              query.longitude_lower_bound && query.longitude_upper_bound)) {
+        if (!(query.latitude && query.longitude)) {
             callback(result);
             return;
         }
@@ -287,21 +313,22 @@ CurrentDB.query_nearby_exercise = function(query, callback) {
         var queryOption = {
             sql: 'select * from ?? where latitude >= ? and latitude <= ? \
               and longitude >= ? and longitude <= ?',
-            values: [KeyDefine.TABLE_NAME, query.latitude_lower_bound, query.latitude_upper_bound,
-              query.longitude_lower_bound, query.longitude_upper_bound],
+            values: [KeyDefine.TABLE_NAME, +query.latitude - KeyDefine.NEARBY_RANGE, +query.latitude + KeyDefine.NEARBY_RANGE,
+              +query.longitude - KeyDefine.NEARBY_RANGE, +query.longitude + KeyDefine.NEARBY_RANGE],
             timeout: 10000
         };
 
         connection.query(queryOption, function(err, rows) {
             if (err) {
-                console.error('Error in updating %s: ' + err.code, KeyDefine.TABLE_NAME);
+                console.error('Error in querying %s: ' + err.code, KeyDefine.TABLE_NAME);
                 callback(result);
                 return;
             }
 
             result.result = KeyDefine.RESULT_SUCCESS;
             result.data = rows;
-            callback(result);
+
+            callbackWithTag(result, callback);
         });
     });
 }
@@ -315,17 +342,16 @@ CurrentDB.query_nearby_tag_exercise = function(query, callback) {
             return;
         }
 
-        if (!(query.latitude_lower_bound && query.latitude_upper_bound &&
-              query.longitude_lower_bound && query.longitude_upper_bound && query.tag)) {
+        if (!(query.latitude && query.longitude && query.tag)) {
             callback(result);
             return;
         }
 
         var queryOption = {
-            sql: 'select exercise.* from exercise, tag where exercise.latitude >= ? and exercise.latitude <= ? \
+            sql: 'select ??.* from exercise, tag where exercise.latitude >= ? and exercise.latitude <= ? \
               and exercise.longitude >= ? and exercise.longitude <= ? and tag.id = ?',
-            values: [query.latitude_lower_bound, query.latitude_upper_bound,
-              query.longitude_lower_bound, query.longitude_upper_bound, query.tag],
+            values: [KeyDefine.TABLE_NAME, +query.latitude - KeyDefine.NEARBY_RANGE, +query.latitude + KeyDefine.NEARBY_RANGE,
+              +query.longitude - KeyDefine.NEARBY_RANGE, +query.longitude + KeyDefine.NEARBY_RANGE, query.tag],
             timeout: 10000
         };
 
@@ -338,7 +364,8 @@ CurrentDB.query_nearby_tag_exercise = function(query, callback) {
 
             result.result = KeyDefine.RESULT_SUCCESS;
             result.data = rows;
-            callback(result);
+
+            callbackWithTag(result, callback);
         });
     });
 }
@@ -372,7 +399,8 @@ CurrentDB.query_user_exercise = function(query, callback) {
 
             result.result = KeyDefine.RESULT_SUCCESS;
             result.data = rows;
-            callback(result);
+
+            callbackWithTag(result, callback);
         });
     });
 }
@@ -407,7 +435,8 @@ CurrentDB.query_user_current_exercise = function(query, callback) {
 
             result.result = KeyDefine.RESULT_SUCCESS;
             result.data = rows;
-            callback(result);
+
+            callbackWithTag(result, callback);
         });
     });
 }
