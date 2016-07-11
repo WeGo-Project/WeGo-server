@@ -9,6 +9,7 @@ KeyDefine.EXERCISE_FINISHED_ATTEND_STATUS = '1';
 KeyDefine.EXERCISE_CANCEL_STATUS = '2';
 KeyDefine.MAX_TIMESTAMP_FORWARD = 24 * 3600 * 1000;
 KeyDefine.RESULT_NOT_SUCH_STATUS = '8100';
+KeyDefine.RESULT_LOGIC_NUMBER_ERROR = '8200';
 KeyDefine.NEARBY_RANGE = 1;
 
 var CurrentDB = {}
@@ -24,20 +25,30 @@ CurrentDB.add_exercise = function(query, callback) {
         var queryOption;
 
         if (query.latitude && query.longitude && query.sponsor_id &&
-                query.start_time && query.end_time && query.description && query.name) {
-            if (query.start_time >= query.end_time || query.start_time <= new Date() - KeyDefine.MAX_TIMESTAMP_FORWARD) {
+                query.start_time && query.end_time && query.description && query.name &&
+                query.min_num && query.max_num && query.deadline && query.avg_cost && query.pic_store) {
+            if (query.start_time >= query.end_time || query.deadline <= query.start_time ||
+                  query.deadline >= query.end_time ||
+                  query.start_time <= new Date() - KeyDefine.MAX_TIMESTAMP_FORWARD) {
                 result.result = KeyDefine.RESULT_TIMESTAMP_ERROR;
+                callback(result);
+                return;
+            }
+            if (query.min_num > query.max_num) {
+                result.result = KeyDefine.RESULT_LOGIC_ERROR;
                 callback(result);
                 return;
             }
 
             queryOption = {
                 sql: 'insert into ?? (latitude, longitude, sponsor_id, start_time,\
-                    end_time, description, name, created_datetime, status) values\
-                    (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                    end_time, description, name, created_datetime, status, min_num, \
+                    max_num, deadline, avg_cost, pic_store) values\
+                    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 values: [KeyDefine.TABLE_NAME, query.latitude, query.longitude, query.sponsor_id,
                       query.start_time, query.end_time, query.description, query.name,
-                      new Date(), KeyDefine.EXERCISE_NEW_STATUS],
+                      new Date(), KeyDefine.EXERCISE_NEW_STATUS, query.min_num,
+                      query.max_num, query.deadline, query.avg_cost, query.pic_store],
                 timeout: 10000
             }
         } else {
@@ -50,12 +61,26 @@ CurrentDB.add_exercise = function(query, callback) {
                 console.error('Error in inserting %s: ' + err.code, KeyDefine.TABLE_NAME);
                 callback(result);
                 return;
-            } else if (rows.length <= 0) {
+            } else if (rows.affectedRows <= 0) {
                 callback(result);
                 return;
             }
 
             result.result = KeyDefine.RESULT_SUCCESS;
+
+            if (query.tag) {
+                var count = 0;
+                for (index in query.tag) {
+                    var exercise_tag_query = {exercise_id: rows.insertId, tag_id: index}
+                    ExerciseTagDB.add(exercise_tag_query, function(current_count) {
+                        return function(exercise_tag_query_result) {
+                            if (exercise_tag_query_result.result !== KeyDefine.RESULT_SUCCESS) {
+                                console.log('Failed to add tag_id while adding exercise');
+                            }
+                        }
+                    }(count));
+                }
+            }
             //result.data = {id: rows[0].id, name: rows[0].name}
             callback(result);
         });

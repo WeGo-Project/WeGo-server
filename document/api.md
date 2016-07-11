@@ -49,21 +49,22 @@
 ### exercise
 |查询操作|url|数据要求|返回数据结构|错误类型|
 |-------|-------|------|------|-------|
-|新建活动|/add_exercise|latitude, longitude, sponsor_id, start_time, end_time, name|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR|
+|新建活动|/add_exercise|latitude, longitude, sponsor_id, start_time, end_time, query.description， query.name， name, min_num, max_num, deadline, avg_cost, pic_store, tag(数组)|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR(当加入tag失败时，exercise创建成功后仍会返回RESULT_SUCCESS)|
 |更改活动开始时间|/chg_start_time|id, start_time|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR|
 |更改活动结束时间|/chg_end_time|id, end_time|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR|
 |更改活动名|/chg_name|id, name|RESULT_SUCCESS|RESULT_FAILED|
 |更改活动位置|/chg_location|latitude, longitude|RESULT_SUCCESS|RESULT_FAILED|
 |更改活动状态|/chg_status|id, status|RESULT_SUCCESS|RESULT_FAILED, RESULT_NOT_SUCH_STATUS|
-|查询一定范围内的活动|/query_nearby_exercise|latitude, longitude|```"data":[{"id":1,"latitude":1,"sponsor_id":"1","start_time":"2016-07-11T00:00:00.000Z","end_time":"2016-07-12T00:00:00.000Z","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:42.000Z","status":1},{"id":2,"latitude":1,"sponsor_id":"1","start_time":"0000-00-00 00:00:00","end_time":"0000-00-00 00:00:00","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:53.000Z","status":0}]```|RESULT_FAILED|
-|查询拥有某个标签的一定范围内的活动|/query_nearby_tag_exercise|latitude, longitude, tag|```"data":[{"id":1,"latitude":1,"sponsor_id":"1","start_time":"2016-07-11T00:00:00.000Z","end_time":"2016-07-12T00:00:00.000Z","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:42.000Z","status":1},{"id":2,"latitude":1,"sponsor_id":"1","start_time":"0000-00-00 00:00:00","end_time":"0000-00-00 00:00:00","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:53.000Z","status":0}]```|RESULT_FAILED|
-|查询某用户发起的所有活动|/query_user_exercise|sponsor_id|```"data":[{"id":1,"latitude":1,"sponsor_id":"1","start_time":"2016-07-11T00:00:00.000Z","end_time":"2016-07-12T00:00:00.000Z","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:42.000Z","status":1},{"id":2,"latitude":1,"sponsor_id":"1","start_time":"0000-00-00 00:00:00","end_time":"0000-00-00 00:00:00","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:53.000Z","status":0}]```|RESULT_FAILED|
-|查询某用户在某段时间内的所有活动|/query_user_current_exercise|sponsor_id, time_lower_bound, time_upper_bound|```"data":[{"id":1,"latitude":1,"sponsor_id":"1","start_time":"2016-07-11T00:00:00.000Z","end_time":"2016-07-12T00:00:00.000Z","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:42.000Z","status":1},{"id":2,"latitude":1,"sponsor_id":"1","start_time":"0000-00-00 00:00:00","end_time":"0000-00-00 00:00:00","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-09T13:08:53.000Z","status":0}]```|RESULT_FAILED|
+|查询一定范围内的活动|/query_nearby_exercise|latitude, longitude|```"data":[{"id":5,"latitude":1,"sponsor_id":"1","start_time":"2016-07-11T00:00:00.000Z","end_time":"2016-07-12T00:00:00.000Z","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-11T06:10:39.000Z","status":0,"min_num":1,"max_num":12,"deadline":"2016-07-11T04:00:00.000Z","avg_cost":2,"pic_store":"1","tag":[{"tag_id":1,"name":"tag"}]}]```|RESULT_FAILED|
+|查询拥有某个标签的一定范围内的活动|/query_nearby_tag_exercise|latitude, longitude, tag|```"data":[{"id":5,"latitude":1,"sponsor_id":"1","start_time":"2016-07-11T00:00:00.000Z","end_time":"2016-07-12T00:00:00.000Z","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-11T06:10:39.000Z","status":0,"min_num":1,"max_num":12,"deadline":"2016-07-11T04:00:00.000Z","avg_cost":2,"pic_store":"1","tag":[{"tag_id":1,"name":"tag"}]}]```|RESULT_FAILED|
+|查询某用户发起的所有活动|/query_user_exercise|sponsor_id|```"data":[{"id":5,"latitude":1,"sponsor_id":"1","start_time":"2016-07-11T00:00:00.000Z","end_time":"2016-07-12T00:00:00.000Z","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-11T06:10:39.000Z","status":0,"min_num":1,"max_num":12,"deadline":"2016-07-11T04:00:00.000Z","avg_cost":2,"pic_store":"1","tag":[{"tag_id":1,"name":"tag"}]}]```|RESULT_FAILED|
+|查询某用户在某段时间内的所有活动|/query_user_current_exercise|sponsor_id, time_lower_bound, time_upper_bound|```"data":[{"id":5,"latitude":1,"sponsor_id":"1","start_time":"2016-07-11T00:00:00.000Z","end_time":"2016-07-12T00:00:00.000Z","name":"1","longitude":1,"description":"1","created_datetime":"2016-07-11T06:10:39.000Z","status":0,"min_num":1,"max_num":12,"deadline":"2016-07-11T04:00:00.000Z","avg_cost":2,"pic_store":"1","tag":[{"tag_id":1,"name":"tag"}]}]```|RESULT_FAILED|
 
 #### exercise状态码定义
 |返回码标识|返回区域|返回码|含义|
 |--------|-------|-----|---|
 |RESULT_NOT_SUCH_STATUS|result|8100|活动状态不正确|
+|RESULT_LOGIC_NUMBER_ERROR|result|8200|最少人数大于最大人数|
 
 #### exercise常量定义
 |标识|值|含义|
