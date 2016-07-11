@@ -49,7 +49,7 @@
 ### exercise
 |查询操作|url|数据要求|返回数据结构|错误类型|
 |-------|-------|------|------|-------|
-|新建活动|/add_exercise|latitude, longitude, sponsor_id, start_time, end_time, name|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR|
+|新建活动|/add_exercise|latitude, longitude, sponsor_id, start_time, end_time, name, min_num, max_num, deadline, avg_cost, pic_store|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR|
 |更改活动开始时间|/chg_start_time|id, start_time|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR|
 |更改活动结束时间|/chg_end_time|id, end_time|RESULT_SUCCESS|RESULT_FAILED, RESULT_TIMESTAMP_ERROR|
 |更改活动名|/chg_name|id, name|RESULT_SUCCESS|RESULT_FAILED|
@@ -64,6 +64,7 @@
 |返回码标识|返回区域|返回码|含义|
 |--------|-------|-----|---|
 |RESULT_NOT_SUCH_STATUS|result|8100|活动状态不正确|
+|RESULT_LOGIC_NUMBER_ERROR|result|8200|最少人数大于最大人数|
 
 #### exercise常量定义
 |标识|值|含义|
