@@ -4,15 +4,14 @@
 block content
     h1 addusrActi
     form(action='/attendency/addusrActi', method='post')
-        input(type='text', name='user_id')
-        input(type='text', name='activity_id')
-        input(type='text', name='created_day')
+        input(type='text', name='user_id', placeholder='user_id')
+        input(type='text', name='activity_id', placeholder='activity_id')
         input(type='submit')
 
     h1 delusrActi
         form(action='/attendency/delusrActi', method='post')
-            input(type='text', name='user_id')
-            input(type='text', name='activity_id')
+            input(type='text', name='user_id', placeholder='user_id')
+            input(type='text', name='activity_id', placeholder='activity_id')
             input(type='submit')
 
     h1 query_usrforActi

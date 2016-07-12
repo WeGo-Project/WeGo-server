@@ -126,6 +126,7 @@
 |-------|-------|------|
 |notice_content|100|用户(user_id)发起/参与的活动(exercise_id)将于1小时内开始|
 |notice_content|200|用户收到新留言|
-|notice_content|300|未定义|
+|notice_content|300|新用户参与到活动|
+|notice_content|400|用户退出活动|
 |status|1|未读|
 |status|2|已读|

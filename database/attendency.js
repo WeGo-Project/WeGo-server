@@ -22,27 +22,63 @@ CurrentDB.addusrActi = function(req, callback) {
             return;
         }
 
-        if (req.user_id && req.activity_id && req.created_day) {
+        if (req.user_id && req.activity_id) {
             var queryOption = {
-                sql: 'insert into attendency (user_id, exercise_id, attend_time) value (?, ?, ?)',
-                values: [req.user_id, req.activity_id, req.created_day],
+                sql: 'SELECT deadline, sponsor_id FROM exercise WHERE id = ?',
+                values: [req.activity_id],
                 timeout: 10000
             };
-
-            connection.query(queryOption, function(err, rows) {
+            connection.query(queryOption, function(err, rows1) {
                 if (err) {
-                    console.error('Error in inserting %s: ' + err.code, KeyDefine.TABLE_NAME);
+                    console.error('Error in querying exercise by exercise_id: ' + err.code);
                     result.result = KeyDefine.RESULT_SERVER_FAILED;
                     callback(result);
                     return;
-                } else if (rows.affectedRows <= 0) {
+                } else if (rows1.length <= 0) {
+                    console.error('Empty in querying exercise');
                     result.result = KeyDefine.RESULT_SERVER_FAILED;
                     callback(result);
                     return;
+                } else {
+                    if (rows1[0].deadline > new Date()) {
+                        queryOption = {
+                            sql: 'insert into attendency (user_id, exercise_id, attend_time) value (?, ?, ?)',
+                            values: [req.user_id, req.activity_id, new Date()],
+                            timeout: 10000
+                        };
+                        connection.query(queryOption, function(err, rows2) {
+                            if (err) {
+                                console.error('Error in inserting %s: ' + err.code, KeyDefine.TABLE_NAME);
+                                result.result = KeyDefine.RESULT_SERVER_FAILED;
+                                callback(result);
+                                return;
+                            } else if (rows2.affectedRows <= 0) {
+                                result.result = KeyDefine.RESULT_SERVER_FAILED;
+                                callback(result);
+                                return;
+                            }
+                            var notice_param = {
+                                user_id: rows1[0].sponsor_id,
+                                exercise_id: req.activity_id,
+                                notice_content: KeyDefine.NOTICE_CONTENT_JOIN_ACTI
+                            };
+                            noticeDB.add(notice_param, function(result2) {
+                                if (result2.result === KeyDefine.RESULT_SUCCESS) {
+                                    callback(result);
+                                } else {
+                                    result.result = KeyDefine.RESULT_FAILED;
+                                    callback(result);
+                                    return;
+                                }
+                            });
+                        });
+                    } else {
+                        console.error('Error: Deadline of exercise: %s is outline', query.activity_id);
+                        result.result = KeyDefine.RESULT_SERVER_FAILED;
+                        callback(result);
+                        return;
+                    }
                 }
-
-                result.data = [];
-                callback(result);
             });
         } else {
             result.result = KeyDefine.RESULT_FAILED;
@@ -76,17 +112,48 @@ CurrentDB.delusrActi = function(req, callback) {
             connection.query(queryOption, function(err, rows) {
                 if (err) {
                     console.error('Error in deleting %s: ' + err.code, KeyDefine.TABLE_NAME);
-                    result.result = err.code;
+                    result.result = KeyDefine.RESULT_SERVER_FAILED;
                     callback(result);
                     return;
                 } else if (rows.affectedRows <= 0) {
                     result.result = '未找到记录';
                     callback(result);
                     return;
+                } else {
+                    queryOption = {
+                        sql: 'SELECT sponsor_id FROM exercise WHERE id = ?',
+                        values: [req.activity_id],
+                        timeout: 10000
+                    };
+                    connection.query(queryOption, function(err, rows) {
+                        if (err) {
+                            console.error('Error in querying exercise by id: ' + err.code);
+                            result.result = KeyDefine.RESULT_SERVER_FAILED;
+                            callback(result);
+                            return;
+                        } else if (rows.length <= 0) {
+                            console.error('Empty in querying exercise by id');
+                            result.result = KeyDefine.RESULT_SERVER_FAILED;
+                            callback(result);
+                            return;
+                        } else {
+                            var notice_param = {
+                                user_id: rows[0].sponsor_id,
+                                exercise_id: req.activity_id,
+                                notice_content: KeyDefine.NOTICE_CONTENT_EXIT_ACTI
+                            };
+                            noticeDB.add(notice_param, function(result2) {
+                                if (result2.result === KeyDefine.RESULT_SUCCESS) {
+                                    callback(result);
+                                } else {
+                                    result.result = KeyDefine.RESULT_FAILED;
+                                    callback(result);
+                                    return;
+                                }
+                            });
+                        }
+                    });
                 }
-
-                result.data = [];
-                callback(result);
             });
         } else {
             result.result = KeyDefine.RESULT_FAILED;
