@@ -9,8 +9,8 @@ router.use(function(req, res, next) {
     //TODO: 验证与鉴权代码代码
     next();
 });
-router.post('/addcomment', function(req, res) {
-    targetDB.addcomment(req.body, function(result) {
+router.post('/add_comment', function(req, res) {
+    targetDB.add_comment(req.body, function(result) {
         res.json(result);
     });
 });

@@ -31,7 +31,7 @@ CurrentDB.add = function(query, callback) {
         var queryOption;
         if (query.exercise_id && query.tag_id) {
             queryOption = {
-                sql: 'INSERT INTO ?? VALUES (?, ?)',
+                sql: 'INSERT INTO ?? (tag_id, exercise_id) VALUES (?, ?)',
                 values: [KeyDefine.TABLE_NAME, query.tag_id, query.exercise_id],
                 timeout: 10000
             }
@@ -78,7 +78,7 @@ CurrentDB.add = function(query, callback) {
                 callback(result);
                 return;
             }
-
+            console.log(rows);
             result.result = KeyDefine.RESULT_SUCCESS;
             callback(result);
         });
