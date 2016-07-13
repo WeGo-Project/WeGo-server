@@ -13,6 +13,54 @@ KeyDefine.RESULT_LOGIC_NUMBER_ERROR = '8200';
 KeyDefine.NEARBY_RANGE = 1;
 
 var CurrentDB = {}
+
+function checkExerciseSponsor(excercise_id, sponsor_id, callback) {
+    DBPool.getConnection(function(query, connection) {
+        if (err) {
+            console.error('Error in getting connection: ' + err.code);
+            callback(false);
+            return;
+        }
+        var queryOption = {
+            sql: 'select * from ?? where sponsor_id = ? and id = ?',
+            values: [KeyDefine.TABLE_NAME, exercise_id, sponsor_id],
+            timeout: 10000
+        };
+
+        connection.query(queryOption, function(err, rows) {
+            if (err) {
+                console.error('Error in querying %s: ' + err.code, KeyDefine.TABLE_NAME);
+                callback(false);
+                return;
+            }
+
+            if (rows.length <= 0) {
+                callback(false);
+                return;
+            }
+
+            callback(true);
+        });
+    });
+}
+
+function recommandExercise(query, result, callback) {
+    result.data.sort(function(left, right) {
+      sort_result = +(left.start_time - right.start_time) / (1000 * 3600 * 24);
+      if (query.latitude && query.longitude) {
+        left_distance = ((query.latitude - left.latitude) * (query.latitude - left.latitude) +
+            (query.longitude - left.longitude) * (query.longitude - left.longitude));
+        right_distance = ((query.latitude - right.latitude) * (query.latitude - right.latitude) +
+            (query.longitude - right.longitude) * (query.longitude - right.longitude));
+        sort_result += left_distance - right_distance;
+      }
+
+      return sort_result;
+        //return left.start_time - right.start_time;
+    });
+    callback(result);
+}
+
 CurrentDB.add_exercise = function(query, callback) {
     DBPool.getConnection(function(err, connection) {
         var result = {request: KeyDefine.ACTION_QUERY, target: KeyDefine.TABLE_NAME, result: KeyDefine.RESULT_FAILED}
@@ -36,6 +84,10 @@ CurrentDB.add_exercise = function(query, callback) {
             }
             if (query.min_num > query.max_num) {
                 result.result = KeyDefine.RESULT_LOGIC_ERROR;
+                callback(result);
+                return;
+            }
+            if (query.sponsor_id !== query.open_id) {
                 callback(result);
                 return;
             }
@@ -264,9 +316,8 @@ CurrentDB.chg_status = function(query, callback) {
             callback(result);
             return;
         }
-        if (query.status !== KeyDefine.EXERCISE_NEW_STATUS &&
-              query.status !== KeyDefine.EXERCISE_CANCEL_STATUS &&
-              query.status !== KeyDefine.EXERCISE_FINISHED_ATTEND_STATUS) {
+
+        if (query.status !== KeyDefine.EXERCISE_CANCEL_STATUS) {
             result.result = KeyDefine.RESULT_NOT_SUCH_STATUS;
             callback(result);
             return;
@@ -296,7 +347,7 @@ CurrentDB.chg_status = function(query, callback) {
     });
 }
 
-function callbackWithTag(result, callback) {
+function callbackWithTag(query, result, callback) {
   if (result.data.length <= 0) {
       callback(result);
       return;
@@ -313,7 +364,7 @@ function callbackWithTag(result, callback) {
               count++;
 
               if (count === result.data.length) {
-                  callback(result);
+                  recommandExercise(query, result, callback);
                   return;
               }
           }
@@ -353,7 +404,7 @@ CurrentDB.query_nearby_exercise = function(query, callback) {
             result.result = KeyDefine.RESULT_SUCCESS;
             result.data = rows;
 
-            callbackWithTag(result, callback);
+            callbackWithTag(query, result, callback);
         });
     });
 }
@@ -390,7 +441,7 @@ CurrentDB.query_nearby_tag_exercise = function(query, callback) {
             result.result = KeyDefine.RESULT_SUCCESS;
             result.data = rows;
 
-            callbackWithTag(result, callback);
+            callbackWithTag(query, result, callback);
         });
     });
 }
@@ -425,7 +476,7 @@ CurrentDB.query_user_exercise = function(query, callback) {
             result.result = KeyDefine.RESULT_SUCCESS;
             result.data = rows;
 
-            callbackWithTag(result, callback);
+            callbackWithTag(query, result, callback);
         });
     });
 }
@@ -461,7 +512,7 @@ CurrentDB.query_user_current_exercise = function(query, callback) {
             result.result = KeyDefine.RESULT_SUCCESS;
             result.data = rows;
 
-            callbackWithTag(result, callback);
+            callbackWithTag(query, result, callback);
         });
     });
 }
