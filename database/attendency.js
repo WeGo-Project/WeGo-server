@@ -22,7 +22,7 @@ CurrentDB.addusrActi = function(req, callback) {
             return;
         }
 
-        if (req.user_id && req.activity_id) {
+        if (req.user_id && req.activity_id && req.phone && req.nickname) {
             var queryOption = {
                 sql: 'SELECT deadline, sponsor_id FROM exercise WHERE id = ?',
                 values: [req.activity_id],
@@ -42,8 +42,8 @@ CurrentDB.addusrActi = function(req, callback) {
                 } else {
                     if (rows1[0].deadline > new Date()) {
                         queryOption = {
-                            sql: 'insert into attendency (user_id, exercise_id, attend_time) value (?, ?, ?)',
-                            values: [req.user_id, req.activity_id, new Date()],
+                            sql: 'insert into attendency (user_id, exercise_id, attend_time, nickname, phone) value (?, ?, ?, ?, ?)',
+                            values: [req.user_id, req.activity_id, new Date(), req.nickname, req.phone],
                             timeout: 10000
                         };
                         connection.query(queryOption, function(err, rows2) {
@@ -204,7 +204,9 @@ CurrentDB.query_usrforActi = function(req, callback) {
                         gender: rows[i].gender,
                         credit: rows[i].credit,
                         attendTime: rows[i].attend_time,
-                        exercise_id: rows[i].exercise_id
+                        exercise_id: rows[i].exercise_id,
+                        nickname: rows[i].nickname,
+                        phone: rows[i].phone
                     };
                     result.data.push(it);
                 }
@@ -255,7 +257,9 @@ CurrentDB.query_actiforusr = function(req, callback) {
                 var it = {
                     user_id: rows[0].user_id,
                     exercise_id: rows[0].exercise_id,
-                    attendTime: rows[0].attend_time
+                    attendTime: rows[0].attend_time,
+                    nickname: rows[i].nickname,
+                    phone: rows[i].phone
                 };
                 result.data.push(it);
                 callback(result);
@@ -316,7 +320,9 @@ CurrentDB.query_allforusr = function(req, callback) {
                         created_datetime: rows[i].created_datetime,
                         status: rows[i].status,
                         minNum: rows[i].min_num,
-                        maxNum: rows[i].max_num
+                        maxNum: rows[i].max_num,
+                        nickname: rows[i].nickname,
+                        phone: rows[i].phone
                     };
                     result.data.push(it);
                 }
@@ -378,7 +384,9 @@ CurrentDB.query_actibytime = function(req, callback) {
                         created_datetime: rows[i].created_datetime,
                         status: rows[i].status,
                         minNum: rows[i].min_num,
-                        maxNum: rows[i].max_num
+                        maxNum: rows[i].max_num,
+                        nickname: rows[i].nickname,
+                        phone: rows[i].phone
                     };
                     result.data.push(it);
                 }
@@ -440,7 +448,9 @@ CurrentDB.query_actibeforeend = function(req, callback) {
                         created_datetime: rows[i].created_datetime,
                         status: rows[i].status,
                         minNum: rows[i].min_num,
-                        maxNum: rows[i].max_num
+                        maxNum: rows[i].max_num,
+                        nickname: rows[i].nickname,
+                        phone: rows[i].phone
                     };
                     result.data.push(it);
                 }

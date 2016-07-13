@@ -4,18 +4,87 @@ var tagDB = require('./tag.js');
 
 var KeyDefine = new Define;
 KeyDefine.TABLE_NAME = 'user_tag';
-KeyDefine.PARAM_LACK_QUERY_PARAM = '1';
-KeyDefine.RESULT_QUERY_FAILED = '2';
-KeyDefine.RESULT_QUERY_EMPTY = '3';
-KeyDefine.RESULT_ADD_FAILED = '4';
-KeyDefine.PARAM_DUP_ENTRY = '5';
-KeyDefine.PARAM_WRONG_TYPE_FOR_COLUMNS = '6';
-KeyDefine.RESULT_NOT_REFERENCED_ROW = '7';
-KeyDefine.RESULT_DELETE_NULL_AFFECT = '8';
+KeyDefine.PARAM_LACK_QUERY_PARAM = '9001';
+KeyDefine.RESULT_QUERY_FAILED = '9002';
+KeyDefine.RESULT_QUERY_EMPTY = '9003';
+KeyDefine.RESULT_ADD_FAILED = '9004';
+KeyDefine.PARAM_DUP_ENTRY = '9005';
+KeyDefine.PARAM_WRONG_TYPE_FOR_COLUMNS = '9006';
+KeyDefine.RESULT_NOT_REFERENCED_ROW = '9007';
+KeyDefine.RESULT_DELETE_NULL_AFFECT = '9008';
 
 var index, len, count;
 
 var CurrentDB = {}
+CurrentDB.update = function(query, callback) {
+    DBPool.getConnection(function(err, connection) {
+        var result = {
+            request: KeyDefine.ACTION_INSERT,
+            target: KeyDefine.TABLE_NAME,
+            result: KeyDefine.RESULT_FAILED
+        };
+
+        if (err) {
+            console.error('Error in getting connection: ' + err.code);
+            callback(result);
+            return;
+        }
+
+        var queryOption;
+        if (query.user_id && query.tag) {
+            queryOption = {
+                sql: 'SELECT * FROM ?? WHERE user_id = ?',
+                values: [KeyDefine.TABLE_NAME, query.user_id],
+                timeout: 10000
+            };
+            connection.query(queryOption, function(err, rows) {
+                if (err) {
+                    console.error('Error in querying user_tag by user_id: ' + err.code);
+                    callback(result);
+                    return;
+                } else if (rows.length <= 0) {
+                    console.log('Empty in querying user_tag by user_id');
+                    var add_query = {
+                        user_id: query.user_id,
+                        tags_id: query.tag
+                    };
+                    CurrentDB.add(add_query, function(result) {
+                        result.result = KeyDefine.RESULT_SUCCESS;
+                        callback(result);
+                    });
+                } else {
+                    count = 0;
+                    for (index in rows) {
+                        queryOption = {
+                            sql: 'DELETE FROM ?? WHERE user_id = ? AND tag_id = ?',
+                            values: [KeyDefine.TABLE_NAME, rows[index].user_id, rows[index].tag_id],
+                            timeout: 10000
+                        };
+                        connection.query(queryOption, function(err, rows2) {
+                            if (err) {
+                                console.error('Error in deleting from user_tag: ' + err.code);
+                                callback(result);
+                                return;
+                            } else {
+                                count++;
+                                if (count === rows.length) {
+                                    var add_query = {
+                                        user_id: query.user_id,
+                                        tags_id: query.tag
+                                    };
+                                    CurrentDB.add(add_query, function(result) {
+                                        result.result = KeyDefine.RESULT_SUCCESS;
+                                        callback(result);
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    });
+}
 CurrentDB.add = function(query, callback) {
     DBPool.getConnection(function(err, connection) {
         var result = {

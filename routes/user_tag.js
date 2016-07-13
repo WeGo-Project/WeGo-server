@@ -14,6 +14,12 @@ router.post('/add_user_tag', function(req, res) {
     });
 });
 
+router.post('/update_user_tag', function(req, res) {
+    targetDB.update(req.body, function(result) {
+        res.json(result);
+    });
+});
+
 router.post('/add_user_new_tag', function(req, res) {
 
 });

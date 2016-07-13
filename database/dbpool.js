@@ -1,12 +1,9 @@
 var mysql = require('mysql')
 
 mysqlPool = mysql.createPool({
-    //user: 'root',
-    //password: 'qweasdzxc',
     database: 'wego',
-    user: 'admin',
-    password: 'password',
-    host: '119.29.235.26'
+    user: 'root',
+    password: 'root'
 });
 
 console.log('database connection pool set up');
