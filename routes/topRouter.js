@@ -31,8 +31,13 @@ router.get('/exercise', function(req, res) {
 router.get('/notice', function(req, res) {
     res.render('notice.jade');
 });
+
 router.get('/image', function(req, res) {
     res.render('image.jade');
+});
+
+router.get('/tag', function(req, res) {
+    res.render('tag.jade');
 });
 
 var user = require('./user.js');
@@ -58,9 +63,8 @@ router.use('/exercise_tag', exercise_tag);
 var user_tag = require('./user_tag.js');
 router.use('/user_tag', user_tag);
 
-//var user_notice = require('./user_notice.js');
-//router.use('/user_notice', user_notice);
-
+var user_notice = require('./user_notice.js');
+router.use('/user_notice', user_notice);
 
 router.get('/exercise_comment', function(req, res) {
     res.render('exercise_comment.jade');

@@ -2,6 +2,8 @@ var DBPool = require('./dbpool.js');
 var Define = require('./define.js');
 var tagDB = require('./tag.js');
 
+var i, len, count;
+
 var KeyDefine = new Define;
 KeyDefine.TABLE_NAME = 'exercise_tag';
 KeyDefine.PARAM_LACK_QUERY_PARAM = '1';
@@ -29,19 +31,57 @@ CurrentDB.add = function(query, callback) {
         }
 
         var queryOption;
-        if (query.exercise_id && query.tag_id) {
-            queryOption = {
-                sql: 'INSERT INTO ?? VALUES (?, ?)',
-                values: [KeyDefine.TABLE_NAME, query.tag_id, query.exercise_id],
-                timeout: 10000
+        if (query.exercise_id && query.tags_id) {
+            var tags = query.tags_id.split('[')[1].split(']')[0].split(',');
+            count = 0;
+            for (index in tags) {
+                queryOption = {
+                    sql: 'INSERT INTO ?? VALUES (?, ?)',
+                    values: [KeyDefine.TABLE_NAME, tags[index], query.exercise_id],
+                    timeout: 10000
+                }
+                connection.query(queryOption, function(err, rows) {
+                    if (err) {
+                        if (err.code === 'ER_DUP_ENTRY') {
+                            console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
+                            result.result = KeyDefine.PARAM_DUP_ENTRY;
+                            callback(result);
+                            return;
+                        } else if (err.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD') {
+                            console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
+                            result.result = KeyDefine.PARAM_WRONG_TYPE_FOR_COLUMNS;
+                            callback(result);
+                            return;
+                        } else if (err.code === 'ER_NO_REFERENCED_ROW_2') {
+                            console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
+                            result.result = KeyDefine.RESULT_NOT_REFERENCED_ROW;
+                            callback(result);
+                            return;
+                        } else {
+                            console.error('Error in inserting %s: ' + err.code, KeyDefine.TABLE_NAME);
+                            callback(result);
+                            return;
+                        }
+                    } else if (rows.length <= 0) {
+                        console.error('Failed in add exercise tag');
+                        result.result = KeyDefine.RESULT_ADD_FAILED;
+                        callback(result);
+                        return;
+                    }
+                    count++;
+                    if (count === tags.length) {
+                        result.result = KeyDefine.RESULT_SUCCESS;
+                        callback(result);
+                    }
+                });
             }
         } else if (!query.exercise_id) {
             console.error('Error in add param: exercise_id');
             result.result = KeyDefine.PARAM_LACK_QUERY_PARAM;
             callback(result);
             return;
-        } else if (!query.tag_id) {
-            console.error('Error in add param: tag_id');
+        } else if (!query.tags_id) {
+            console.error('Error in add param: tags_id');
             result.result = KeyDefine.PARAM_LACK_QUERY_PARAM;
             callback(result);
             return;
@@ -49,39 +89,6 @@ CurrentDB.add = function(query, callback) {
             callback(result);
             return;
         }
-
-        connection.query(queryOption, function(err, rows) {
-            if (err) {
-                if (err.code === 'ER_DUP_ENTRY') {
-                    console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
-                    result.result = KeyDefine.PARAM_DUP_ENTRY;
-                    callback(result);
-                    return;
-                } else if (err.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD') {
-                    console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
-                    result.result = KeyDefine.PARAM_WRONG_TYPE_FOR_COLUMNS;
-                    callback(result);
-                    return;
-                } else if (err.code === 'ER_NO_REFERENCED_ROW_2') {
-                    console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
-                    result.result = KeyDefine.RESULT_NOT_REFERENCED_ROW;
-                    callback(result);
-                    return;
-                } else {
-                    console.error('Error in inserting %s: ' + err.code, KeyDefine.TABLE_NAME);
-                    callback(result);
-                    return;
-                }
-            } else if (rows.length <= 0) {
-                console.error('Failed in add exercise tag');
-                result.result = KeyDefine.RESULT_ADD_FAILED;
-                callback(result);
-                return;
-            }
-
-            result.result = KeyDefine.RESULT_SUCCESS;
-            callback(result);
-        });
     });
 }
 CurrentDB.query = function(query, callback) {
@@ -127,7 +134,7 @@ CurrentDB.query = function(query, callback) {
             }
 
             result.data = new Array();
-            var count = 0;
+            count = 0;
             for (var index in rows) {
                 var query = {
                     tag_id: rows[index].tag_id

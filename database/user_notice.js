@@ -15,6 +15,7 @@ KeyDefine.RESULT_UPDATE_NULL_AFFECT = '9';
 KeyDefine.NOTICE_STATUS_UNREAD = '1';
 KeyDefine.NOTICE_STATUS_READ = '2';
 KeyDefine.NOTICE_CONTENT_TIME = '100';
+KeyDefine.NOTICE_CONTENT_COMMENT = '200';
 
 var CurrentDB = {}
 CurrentDB.add = function(query, callback) {
@@ -32,13 +33,13 @@ CurrentDB.add = function(query, callback) {
         }
 
         var queryOption;
-        if (query.user_id && query.exercise_id && query.notice_content && query.time) {
+        if (query.user_id && query.exercise_id && query.notice_content) {
             queryOption = {
                 sql: 'INSERT INTO ?? (user_id, exercise_id, notice_content, time, status) VALUE (?, ?, ?, ?, ?)',
                 values: [KeyDefine.TABLE_NAME, query.user_id, query.exercise_id, query.notice_content, new Date(), KeyDefine.NOTICE_STATUS_UNREAD],
                 timeout: 10000
             }
-        } else if (!query.user_id || !query.exercise_id || !query.notice_content || !query.time) {
+        } else if (!query.user_id || !query.exercise_id || !query.notice_content) {
             console.error('Error in getting add params');
             result.result = KeyDefine.PARAM_LACK_QUERY_PARAM;
             callback(result);

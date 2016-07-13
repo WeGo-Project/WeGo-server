@@ -13,6 +13,8 @@ KeyDefine.PARAM_WRONG_TYPE_FOR_COLUMNS = '6';
 KeyDefine.RESULT_NOT_REFERENCED_ROW = '7';
 KeyDefine.RESULT_DELETE_NULL_AFFECT = '8';
 
+var index, len, count;
+
 var CurrentDB = {}
 CurrentDB.add = function(query, callback) {
     DBPool.getConnection(function(err, connection) {
@@ -29,11 +31,49 @@ CurrentDB.add = function(query, callback) {
         }
 
         var queryOption;
-        if (query.user_id && query.tag_id) {
-            queryOption = {
-                sql: 'INSERT INTO ?? VALUES (?, ?)',
-                values: [KeyDefine.TABLE_NAME, query.tag_id, query.user_id],
-                timeout: 10000
+        if (query.user_id && query.tags_id) {
+            var tags = query.tags_id.split('[')[1].split(']')[0].split(',');
+            count = 0;
+            for (index in tags) {
+                queryOption = {
+                    sql: 'INSERT INTO ?? VALUES (?, ?)',
+                    values: [KeyDefine.TABLE_NAME, tags[index], query.user_id],
+                    timeout: 10000
+                };
+                connection.query(queryOption, function(err, rows) {
+                    if (err) {
+                        if (err.code === 'ER_DUP_ENTRY') {
+                            console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
+                            result.result = KeyDefine.PARAM_DUP_ENTRY;
+                            callback(result);
+                            return;
+                        } else if (err.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD') {
+                            console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
+                            result.result = KeyDefine.PARAM_WRONG_TYPE_FOR_COLUMNS;
+                            callback(result);
+                            return;
+                        } else if (err.code === 'ER_NO_REFERENCED_ROW_2') {
+                            console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
+                            result.result = KeyDefine.RESULT_NOT_REFERENCED_ROW;
+                            callback(result);
+                            return;
+                        } else {
+                            console.error('Error in inserting %s: ' + err.code, KeyDefine.TABLE_NAME);
+                            callback(result);
+                            return;
+                        }
+                    } else if (rows.affectedRows === 0) {
+                        console.error('Failed in add user tag');
+                        result.result = KeyDefine.RESULT_ADD_FAILED;
+                        callback(result);
+                        return;
+                    }
+                    count++;
+                    if (count === tags.length) {
+                        result.result = KeyDefine.RESULT_SUCCESS;
+                        callback(result);
+                    }
+                });
             }
         } else if (!query.user_id) {
             console.error('Error in add param: user_id');
@@ -49,39 +89,6 @@ CurrentDB.add = function(query, callback) {
             callback(result);
             return;
         }
-
-        connection.query(queryOption, function(err, rows) {
-            if (err) {
-                if (err.code === 'ER_DUP_ENTRY') {
-                    console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
-                    result.result = KeyDefine.PARAM_DUP_ENTRY;
-                    callback(result);
-                    return;
-                } else if (err.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD') {
-                    console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
-                    result.result = KeyDefine.PARAM_WRONG_TYPE_FOR_COLUMNS;
-                    callback(result);
-                    return;
-                } else if (err.code === 'ER_NO_REFERENCED_ROW_2') {
-                    console.error('Error in adding %s: ' + err.code, KeyDefine.TABLE_NAME);
-                    result.result = KeyDefine.RESULT_NOT_REFERENCED_ROW;
-                    callback(result);
-                    return;
-                } else {
-                    console.error('Error in inserting %s: ' + err.code, KeyDefine.TABLE_NAME);
-                    callback(result);
-                    return;
-                }
-            } else if (rows.affectedRows === 0) {
-                console.error('Failed in add user tag');
-                result.result = KeyDefine.RESULT_ADD_FAILED;
-                callback(result);
-                return;
-            }
-
-            result.result = KeyDefine.RESULT_SUCCESS;
-            callback(result);
-        });
     });
 }
 CurrentDB.query = function(query, callback) {
@@ -127,7 +134,7 @@ CurrentDB.query = function(query, callback) {
             }
 
             result.data = new Array();
-            var count = 0;
+            count = 0;
             for (var index in rows) {
                 var query = {
                     tag_id: rows[index].tag_id
