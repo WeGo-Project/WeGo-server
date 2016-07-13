@@ -130,3 +130,9 @@
 |notice_content|400|用户退出活动|
 |status|1|未读|
 |status|2|已读|
+
+### Image
+|查询操作|url|数据要求|返回数据结构|错误类型|
+|-------|-------|------|------|-------|
+|上传图片|/upload||{"request":"upload","target":"file","result":"200","data":"MeControlXXLUserTile.jpg"}|RESULT_FAILED|
+|下载图片|/download|id, name||(在header中)400[发送过程中出现了错误], 404[没有这个图片]|
