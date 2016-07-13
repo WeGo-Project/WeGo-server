@@ -154,3 +154,9 @@
 |7007|外键限制错误|
 |7008|删除影响列为空|
 |7009|更新影响列为空|
+
+### Image
+|查询操作|url|数据要求|返回数据结构|错误类型|
+|-------|-------|------|------|-------|
+|上传图片|/upload||{"request":"upload","target":"file","result":"200","data":"MeControlXXLUserTile.jpg"}|RESULT_FAILED|
+|下载图片|/download|id, name||(在header中)400[发送过程中出现了错误], 404[没有这个图片]|
