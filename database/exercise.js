@@ -393,6 +393,14 @@ CurrentDB.query_nearby_exercise = function(query, callback) {
             timeout: 10000
         };
 
+        if (query.latitude <= 0 && query.longitude <= 0) {
+            queryOption = {
+                sql: 'select * from ?? ',
+                values: [KeyDefine.TABLE_NAME],
+                timeout: 10000
+            }
+        }
+
         connection.query(queryOption, function(err, rows) {
             if (err) {
                 console.error('Error in querying %s: ' + err.code, KeyDefine.TABLE_NAME);
