@@ -72,7 +72,7 @@ router.post('/download', function (req, res) {
             if (error) {
               console.log('send file error: ' + error);
               try {
-                res.sendStatus(200);
+                res.sendStatus(400);
               } catch (error) {
                 console.log("error in send file: " + error.toString());
               }
