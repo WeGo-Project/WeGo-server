@@ -22,8 +22,6 @@ router.use(function(req, res, next) {
     next();
 });
 
-var formidable = require('formidable');
-
 router.get('/user', function(req, res) {
     res.render('user.jade');
 });
@@ -33,11 +31,16 @@ router.get('/exercise', function(req, res) {
 router.get('/notice', function(req, res) {
     res.render('notice.jade');
 });
+router.get('/image', function(req, res) {
+    res.render('image.jade');
+});
 
 var user = require('./user.js');
 router.use('/user', user);
 var exercise = require('./exercise.js');
 router.use('/exercise', exercise);
+var exercise = require('./image.js');
+router.use('/image', exercise);
 
 router.get('/attendency', function(req, res) {
     res.render('attendency.jade');

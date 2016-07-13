@@ -1,7 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var targetDB = require('../database/image.js');
 var formidable = require('formidable');
+var Define = require('../database/define.js');
+var fs = require('fs');
+var KeyDefine = new Define;
+
+var fileFinishedDirectory = './image/finished/';
+var fileTempDirectory = './image/tmp/';
 
 // 以下中间件用于用户登录验证和鉴权
 router.use(function(req, res, next) {
@@ -14,10 +19,10 @@ router.get('/upload', function (req, res) {
     var result = { request: 'upload', target: 'image'};
     fs.exists(fileFinishedDirectory + req.query.filename, function (exists) {
       if (exists) {
-        result.result = 'failed';
+        result.result = KeyDefine.RESULT_FAILED;
         console.log('file already exists: ' + req.query.filename);
       } else {
-        result.result = 'success';
+        result.result = KeyDefine.RESULT_SUCCESS;
         console.log('file not found, sending able to accept file: ' + req.query.filename);
       }
       result.data = req.query.filename;
@@ -32,42 +37,42 @@ router.post('/upload', function (req, res) {
     form.parse(req, function(error, fields, files) {
       var result = { request: 'upload', target: 'file'};
       if (error) {
-          result.result = 'error: ' + error.toString();
+          result.result = KeyDefine.RESULT_FAILED;
           console.log(error.toString());
           res.json(result);
           return;
       }
 
       var targetFilePath = fileFinishedDirectory + files.file.name;
+      console.log(files.file.path);
+      console.log(targetFilePath);
       fs.rename(files.file.path, targetFilePath, function (error) {
           if (error) {
-              result.result = 'failed';
+              result.result = KeyDefine.RESULT_FAILED;
               console.log(error.toString());
               res.json(result);
               return;
-          } else {
-              result.result = 'success';
-              console.log("Saved file: " + result.data);
           }
-
+          result.result = KeyDefine.RESULT_SUCCESS;
           result.data = files.file.name;
+          console.log("Saved file: " + result.data);
           res.json(result);
       });
     });
 });
 
 router.post('/download', function (req, res) {
-    console.log('requested to send file: ' + req.query.filename);
-    var filename = req.query.filename;
+    console.log('requested to send file: ' + req.body.filename);
+    var filename = req.body.filename;
 
-    fs.exists(fileFinishedDirectory + req.query.filename, function (exists) {
+    fs.exists(fileFinishedDirectory + req.body.filename, function (exists) {
       if (exists) {
           var sendOptions = { root: fileFinishedDirectory };
           res.sendFile(filename, sendOptions, function (error) {
             if (error) {
               console.log('send file error: ' + error);
               try {
-                res.sendStatus(404);
+                res.sendStatus(200);
               } catch (error) {
                 console.log("error in send file: " + error.toString());
               }
