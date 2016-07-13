@@ -44,9 +44,6 @@ CurrentDB.update = function(query, callback) {
                     return;
                 } else if (rows.length <= 0) {
                     console.error('Empty in querying user_tag by user_id');
-                    result.result = KeyDefine.RESULT_QUERY_EMPTY;
-                    callback(result);
-                    return;
                 } else {
                     count = 0;
                     for (index in rows) {

@@ -6,6 +6,8 @@ block content
     form(action='/attendency/addusrActi', method='post')
         input(type='text', name='user_id', placeholder='user_id')
         input(type='text', name='activity_id', placeholder='activity_id')
+        input(type='text', name='nickname', placeholder='nickname')
+        input(type='text', name='phone', placeholder='phone')
         input(type='submit')
 
     h1 delusrActi
@@ -16,28 +18,28 @@ block content
 
     h1 query_usrforActi
         form(action='/attendency/query_usrforActi', method='post')
-            input(type='text', name='activity_id')
+            input(type='text', name='activity_id', placeholder="activity_id")
             input(type='submit')
 
     h1 query_actiforusr
         form(action='/attendency/query_actiforusr', method='post')
-            input(type='text', name='user_id')
-            input(type='text', name='activity_id')
+            input(type='text', name='user_id', placeholder='user_id')
+            input(type='text', name='activity_id', placeholder='activity_id')
             input(type='submit')
 
     h1 query_allforusr
         form(action='/attendency/query_allforusr', method='post')
-            input(type='text', name='user_id')
+            input(type='text', name='user_id', placeholder='user_id')
             input(type='submit')
 
     h1 query_actibytime
         form(action='/attendency/query_actibytime', method='post')
-            input(type='text', name='user_id')
-            input(type='text', name='time_lower_bound')
-            input(type='text', name='time_upper_bound')
+            input(type='text', name='user_id', placeholder='user_id')
+            input(type='text', name='time_lower_bound', placeholder='time_lower_bound')
+            input(type='text', name='time_upper_bound', placeholder='time_upper_bound')
             input(type='submit')
 
     h1 query_actibeforeend
         form(action='/attendency/query_actibeforeend', method='post')
-            input(type='text', name='user_id')
+            input(type='text', name='user_id', placeholder="user_id")
             input(type='submit')
