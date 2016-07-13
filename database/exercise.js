@@ -88,7 +88,7 @@ CurrentDB.add_exercise = function(query, callback) {
                 return;
             }
 
-            //query.open_id = query.sponsor_id;
+            query.open_id = query.sponsor_id;
 
             if (query.sponsor_id !== query.open_id) {
                 callback(result);
@@ -132,7 +132,7 @@ CurrentDB.add_exercise = function(query, callback) {
                     }
                 });
             }
-            //result.data = {id: rows[0].id, name: rows[0].name}
+            result.data = {id: rows.insertId}
             callback(result);
         });
     });
