@@ -198,34 +198,16 @@ CurrentDB.query = function(query, callback) {
                 return;
             } else if (rows.length <= 0) {
                 result.result = KeyDefine.RESULT_QUERY_EMPTY;
+                result.data = new Array();
                 callback(result);
                 return;
             }
-
             result.data = new Array();
-            count = 0;
-            for (var index in rows) {
-                var query = {
-                    tag_id: rows[index].tag_id
-                };
-                tagDB.query(query, function(current_result) {
-                    if (current_result.result === KeyDefine.RESULT_SUCCESS) {
-                        result.data.push(current_result.data);
-                    }
-                    count++;
-                    if (count == rows.length) {
-                        if (result.data.length <= 0) {
-                            console.log('Empty in query user tag');
-                            result.result = KeyDefine.RESULT_QUERY_EMPTY;
-                            callback(result);
-                            return;
-                        } else {
-                            result.result = KeyDefine.RESULT_SUCCESS;
-                            callback(result);
-                        }
-                    }
-                });
+            for (index in rows) {
+                result.data.push(rows[index].tag_id);
             }
+            result.result = KeyDefine.RESULT_SUCCESS;
+            callback(result);
         });
     });
 }
