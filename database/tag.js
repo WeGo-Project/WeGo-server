@@ -3,9 +3,9 @@ var Define = require('./define.js');
 
 var KeyDefine = new Define;
 KeyDefine.TABLE_NAME = 'tag';
-KeyDefine.PARAM_LACK_QUERY_PARAM = '1';
-KeyDefine.RESULT_QUERY_FAILED = '2';
-KeyDefine.RESULT_QUERY_EMPTY = '3';
+KeyDefine.PARAM_LACK_QUERY_PARAM = '9001';
+KeyDefine.RESULT_QUERY_FAILED = '9002';
+KeyDefine.RESULT_QUERY_EMPTY = '9003';
 
 var CurrentDB = {}
 CurrentDB.query = function(query, callback) {

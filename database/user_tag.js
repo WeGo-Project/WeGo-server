@@ -4,14 +4,14 @@ var tagDB = require('./tag.js');
 
 var KeyDefine = new Define;
 KeyDefine.TABLE_NAME = 'user_tag';
-KeyDefine.PARAM_LACK_QUERY_PARAM = '1';
-KeyDefine.RESULT_QUERY_FAILED = '2';
-KeyDefine.RESULT_QUERY_EMPTY = '3';
-KeyDefine.RESULT_ADD_FAILED = '4';
-KeyDefine.PARAM_DUP_ENTRY = '5';
-KeyDefine.PARAM_WRONG_TYPE_FOR_COLUMNS = '6';
-KeyDefine.RESULT_NOT_REFERENCED_ROW = '7';
-KeyDefine.RESULT_DELETE_NULL_AFFECT = '8';
+KeyDefine.PARAM_LACK_QUERY_PARAM = '9001';
+KeyDefine.RESULT_QUERY_FAILED = '9002';
+KeyDefine.RESULT_QUERY_EMPTY = '9003';
+KeyDefine.RESULT_ADD_FAILED = '9004';
+KeyDefine.PARAM_DUP_ENTRY = '9005';
+KeyDefine.PARAM_WRONG_TYPE_FOR_COLUMNS = '9006';
+KeyDefine.RESULT_NOT_REFERENCED_ROW = '9007';
+KeyDefine.RESULT_DELETE_NULL_AFFECT = '9008';
 
 var index, len, count;
 
