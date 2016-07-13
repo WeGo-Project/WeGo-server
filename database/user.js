@@ -76,7 +76,6 @@ CurrentDB.register = function(query, callback) {
             timeout: 10000
         };
 
-
         connection.query(queryOption, function(err, rows) {
             if (err) {
                 console.error('Error in inserting %s: ' + err.code, KeyDefine.TABLE_NAME);
@@ -89,21 +88,14 @@ CurrentDB.register = function(query, callback) {
                 return;
             }
 
-            //query.tag = '{"0":"2","1":"exercise"}';
-            query.tag = JSON.parse(query.tag);
             if (query.tag) {
-                var count = 0;
-                for (index in query.tag) {
-                    var user_tag_query = {user_id: query.id, tag_id: index}
-                    console.log(user_tag_query);
-                    UserTagDB.add(user_tag_query, function(current_count) {
-                        return function(user_tag_query_result) {
-                            if (user_tag_query_result.result !== KeyDefine.RESULT_SUCCESS) {
-                                console.log('Failed to add tag_id while adding user');
-                            }
-                        }
-                    }(count));
-                }
+                var user_tag_query = {user_id: query.id, tags_id: query.tag}
+                console.error(user_tag_query);
+                UserTagDB.add(user_tag_query, function(user_tag_query_result) {
+                    if (user_tag_query_result.result !== KeyDefine.RESULT_SUCCESS) {
+                        console.log('Failed to add tag_id while adding user');
+                    }
+                });
             }
 
             result.result = KeyDefine.RESULT_SUCCESS;
