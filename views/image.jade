@@ -1,0 +1,14 @@
+h3 file upload
+        form(action='/image/upload', enctype='multipart/form-data', method='post')
+            input(type='file' name='file')
+            input(type='submit')
+
+h3 file list
+        form(action='/image/upload', method='get')
+            input(type='text' name='filename')
+            input(type='submit')
+
+h3 file list
+        form(action='/image/download', method='post')
+            input(type='text' name='filename')
+            input(type='submit')
