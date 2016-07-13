@@ -95,6 +95,7 @@
 |为某个用户添加标签|/add_user_tag|tags_id, user_id|result: 200|
 |为某个用户添加一个新的标签|/add_user_new_tag|name, user_id|未实现|
 |删除用户的一个标签|/del_tag|tag_id, user_id|result: 200|
+|更新用户的标签列表|/update_user_tag|tag, user_id|result: 200|
 |查询某个用户的tag|/query_usr_tag|user_id|```data:[{"tag_id":3,"name":"tag3"},{"tag_id":1,"name":"tag1"},{"tag_id":2,"name":"tag2"}]```|
 
 ### tag相关错误代码含义
