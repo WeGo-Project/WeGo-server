@@ -17,6 +17,8 @@ KeyDefine.NOTICE_STATUS_READ = '2';
 KeyDefine.NOTICE_CONTENT_TIME = '100';
 KeyDefine.NOTICE_CONTENT_COMMENT = '200';
 
+var index, len, count;
+
 var CurrentDB = {}
 CurrentDB.add = function(query, callback) {
     DBPool.getConnection(function(err, connection) {
@@ -231,20 +233,18 @@ CurrentDB.query = function(query, callback) {
             target: KeyDefine.TABLE_NAME,
             result: KeyDefine.RESULT_FAILED
         }
-
         if (err) {
             console.error('Error in getting connection: ' + err.code);
             callback(result);
             return;
         }
-
         var queryOption;
         if (query.user_id) {
             queryOption = {
                 sql: 'SELECT * FROM ?? WHERE user_id = ?',
                 values: [KeyDefine.TABLE_NAME, query.user_id],
                 timeout: 10000
-            }
+            };
             connection.query(queryOption, function(err, rows) {
                 if (err) {
                     console.error('Error in query notice by user_id: ' + err.code);
@@ -252,8 +252,36 @@ CurrentDB.query = function(query, callback) {
                     return;
                 } else if (rows.length > 0) {
                     result.result = KeyDefine.RESULT_SUCCESS;
-                    result.data = rows;
-                    callback(result);
+                    count = 0;
+                    for (index in rows) {
+                        if (rows[index].notice_content === '100') {
+                            queryOption = {
+                                sql: 'SELECT name FROM exercise WHERE id = ?',
+                                values: [rows[index].exercise_id],
+                                timeout: 10000
+                            };
+                            connection.query(queryOption, function(err, rows2) {
+                                if (err) {
+                                    console.error('Error in querying exercise by exercise_id ' + rows[index].exercise_id + ': ' + err.code);
+                                } else if (rows2.length <= 0) {
+                                    console.error('Empty in querying exericse name by exercise_id ' + rows[index].exercise_id);
+                                } else {
+                                    rows[index].notice_content = '您参加的活动: ' + rows2[0].name + ' 将在1小时后开始.';
+                                }
+                                count++;
+                                if (count === rows.length) {
+                                    result.data = rows;
+                                    callback(result);
+                                }
+                            });
+                        } else {
+                            count++;
+                            if (count === rows.length) {
+                                result.data = rows;
+                                callback(result);
+                            }
+                        }
+                    }
                 } else {
                     result.result = KeyDefine.RESULT_QUERY_EMPTY;
                     callback(result);

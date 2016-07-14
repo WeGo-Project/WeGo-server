@@ -58,19 +58,44 @@ CurrentDB.addusrActi = function(req, callback) {
                                 callback(result);
                                 return;
                             }
-                            var notice_param = {
-                                user_id: rows1[0].sponsor_id,
-                                exercise_id: req.activity_id,
-                                notice_content: KeyDefine.NOTICE_CONTENT_JOIN_ACTI
+                            var notice_content;
+                            queryOption = {
+                                sql: 'SELECT name FROM users WHERE id = ?',
+                                values: [req.user_id],
+                                timeout: 10000
                             };
-                            noticeDB.add(notice_param, function(result2) {
-                                if (result2.result === KeyDefine.RESULT_SUCCESS) {
-                                    callback(result);
+                            connection.query(queryOption, function(err, rows3) {
+                                if (err || rows3.length <= 0) {
+                                    notice_content = '有新用户参与活动';
                                 } else {
-                                    result.result = KeyDefine.RESULT_FAILED;
-                                    callback(result);
-                                    return;
+                                    notice_content = '用户: ' + rows3[0].name + '参与活动';
                                 }
+                                queryOption = {
+                                    sql: 'SELECT name FROM exercise WHERE id = ?',
+                                    values: [req.activity_id],
+                                    timeout: 10000
+                                };
+                                connection.query(queryOption, function(err, rows4) {
+                                    if (err || rows4.length <= 0) {
+                                        notice_content += '';
+                                    } else {
+                                        notice_content += ': ' + rows4[0].name;
+                                    }
+                                    var notice_param = {
+                                        user_id: rows1[0].sponsor_id,
+                                        exercise_id: req.activity_id,
+                                        notice_content: notice_content
+                                    };
+                                    noticeDB.add(notice_param, function(result2) {
+                                        if (result2.result === KeyDefine.RESULT_SUCCESS) {
+                                            callback(result);
+                                        } else {
+                                            result.result = KeyDefine.RESULT_FAILED;
+                                            callback(result);
+                                            return;
+                                        }
+                                    });
+                                })
                             });
                         });
                     } else {
@@ -126,7 +151,7 @@ CurrentDB.delusrActi = function(req, callback) {
                         values: [req.activity_id],
                         timeout: 10000
                     };
-                    connection.query(queryOption, function(err, rows) {
+                    connection.query(queryOption, function(err, rows1) {
                         if (err) {
                             console.error('Error in querying exercise by id: ' + err.code);
                             result.result = KeyDefine.RESULT_SERVER_FAILED;
@@ -138,19 +163,44 @@ CurrentDB.delusrActi = function(req, callback) {
                             callback(result);
                             return;
                         } else {
-                            var notice_param = {
-                                user_id: rows[0].sponsor_id,
-                                exercise_id: req.activity_id,
-                                notice_content: KeyDefine.NOTICE_CONTENT_EXIT_ACTI
+                            var notice_content;
+                            queryOption = {
+                                sql: 'SELECT name FROM users WHERE id = ?',
+                                values: [req.user_id],
+                                timeout: 10000
                             };
-                            noticeDB.add(notice_param, function(result2) {
-                                if (result2.result === KeyDefine.RESULT_SUCCESS) {
-                                    callback(result);
+                            connection.query(queryOption, function(err, rows3) {
+                                if (err || rows3.length <= 0) {
+                                    notice_content = '有用户退出活动';
                                 } else {
-                                    result.result = KeyDefine.RESULT_FAILED;
-                                    callback(result);
-                                    return;
+                                    notice_content = '用户: ' + rows3[0].name + '退出活动';
                                 }
+                                queryOption = {
+                                    sql: 'SELECT name FROM exercise WHERE id = ?',
+                                    values: [req.activity_id],
+                                    timeout: 10000
+                                };
+                                connection.query(queryOption, function(err, rows4) {
+                                    if (err || rows4.length <= 0) {
+                                        notice_content += '';
+                                    } else {
+                                        notice_content += ': ' + rows4[0].name;
+                                    }
+                                    var notice_param = {
+                                        user_id: rows1[0].sponsor_id,
+                                        exercise_id: req.activity_id,
+                                        notice_content: notice_content
+                                    };
+                                    noticeDB.add(notice_param, function(result2) {
+                                        if (result2.result === KeyDefine.RESULT_SUCCESS) {
+                                            callback(result);
+                                        } else {
+                                            result.result = KeyDefine.RESULT_FAILED;
+                                            callback(result);
+                                            return;
+                                        }
+                                    });
+                                })
                             });
                         }
                     });
