@@ -431,12 +431,20 @@ CurrentDB.query_nearby_tag_exercise = function(query, callback) {
         }
 
         var queryOption = {
-            sql: 'select ??.* from exercise, tag where exercise.latitude >= ? and exercise.latitude <= ? \
-              and exercise.longitude >= ? and exercise.longitude <= ? and tag.id = ?',
+            sql: 'select ??.* from exercise where exercise.latitude >= ? and exercise.latitude <= ? \
+              and exercise.longitude >= ? and exercise.longitude <= ? and id in (select exercise_id from exercise_tag where tag_id = ?);',
             values: [KeyDefine.TABLE_NAME, +query.latitude - KeyDefine.NEARBY_RANGE, +query.latitude + KeyDefine.NEARBY_RANGE,
               +query.longitude - KeyDefine.NEARBY_RANGE, +query.longitude + KeyDefine.NEARBY_RANGE, query.tag],
             timeout: 10000
         };
+
+        if (query.latitude <= 0 && query.longitude <= 0) {
+            queryOption = {
+                sql: 'select * from exercise where id in (select exercise_id from exercise_tag where tag_id = ?);',
+                values: [KeyDefine.TABLE_NAME, query.tag],
+                timeout: 10000
+            }
+        }
 
         connection.query(queryOption, function(err, rows) {
             if (err) {
