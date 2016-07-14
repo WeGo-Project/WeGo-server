@@ -6,6 +6,7 @@ var KeyDefine = new Define;
 KeyDefine.TABLE_NAME = 'attendency';
 KeyDefine.NOTICE_CONTENT_JOIN_ACTI = '300';
 KeyDefine.NOTICE_CONTENT_EXIT_ACTI = '400';
+KeyDefine.ACTIVITY_OUTLINE = '1000';
 
 var CurrentDB = {};
 CurrentDB.addusrActi = function(req, callback) {
@@ -73,8 +74,8 @@ CurrentDB.addusrActi = function(req, callback) {
                             });
                         });
                     } else {
-                        console.error('Error: Deadline of exercise: %s is outline', query.activity_id);
-                        result.result = KeyDefine.RESULT_SERVER_FAILED;
+                        console.error('Error: Deadline of exercise: %s is outline', req.activity_id);
+                        result.result = KeyDefine.ACTIVITY_OUTLINE;
                         callback(result);
                         return;
                     }
