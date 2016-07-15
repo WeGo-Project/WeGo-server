@@ -270,7 +270,6 @@ CurrentDB.query = function(query, callback) {
                                 }
                                 count++;
                                 rows[index].time = new Date(+(new Date(rows[index].time)) + 28800000);
-                                console.log(rows[index].time);
                                 if (count === rows.length) {
                                     result.data = rows;
                                     callback(result);
@@ -279,7 +278,6 @@ CurrentDB.query = function(query, callback) {
                         } else {
                             count++;
                             rows[index].time = new Date(+(new Date(rows[index].time)) + 28800000);
-                            console.log(rows[index].time);
                             if (count === rows.length) {
                                 result.data = rows;
                                 callback(result);
