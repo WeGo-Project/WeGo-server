@@ -309,8 +309,8 @@ CurrentDB.query_actiforusr = function(req, callback) {
                     user_id: rows[0].user_id,
                     exercise_id: rows[0].exercise_id,
                     attendTime: rows[0].attend_time,
-                    nickname: rows[i].nickname,
-                    phone: rows[i].phone
+                    nickname: rows[0].nickname,
+                    phone: rows[0].phone
                 };
                 result.data.push(it);
                 callback(result);

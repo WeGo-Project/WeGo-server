@@ -269,6 +269,8 @@ CurrentDB.query = function(query, callback) {
                                     rows[index].notice_content = '您参加的活动: ' + rows2[0].name + ' 将在1小时后开始.';
                                 }
                                 count++;
+                                rows[index].time = new Date(+(new Date(rows[index].time)) + 28800000);
+                                console.log(rows[index].time);
                                 if (count === rows.length) {
                                     result.data = rows;
                                     callback(result);
@@ -276,6 +278,8 @@ CurrentDB.query = function(query, callback) {
                             });
                         } else {
                             count++;
+                            rows[index].time = new Date(+(new Date(rows[index].time)) + 28800000);
+                            console.log(rows[index].time);
                             if (count === rows.length) {
                                 result.data = rows;
                                 callback(result);
